@@ -1,4 +1,4 @@
-package gotg
+package api
 
 import (
 	"errors"
@@ -10,6 +10,13 @@ import (
 	"strconv"
 )
 
+/*
+	in: message to send
+	out: error which possibly can happen because of wrong recipient
+	or absence of rights to send the message.
+
+	Sends given message using Client' credentials
+ */
 func (c *Client) SendMessage(m Message) error {
 	req := url.Values{}
 	req.Add("chat_id", strconv.Itoa(m.ChatID))
@@ -19,6 +26,8 @@ func (c *Client) SendMessage(m Message) error {
 	if m.InlineMarkup.Buttons != nil {
 		req.Add("reply_markup", m.InlineMarkup.stringify())
 	}
+
+	// TODO: if message has photo entity
 
 	query := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage?", c.token) + req.Encode()
 	resp, err := http.Get(query)

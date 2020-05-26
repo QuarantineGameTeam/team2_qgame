@@ -1,4 +1,4 @@
-package gotg
+package api
 
 import (
 	"encoding/json"

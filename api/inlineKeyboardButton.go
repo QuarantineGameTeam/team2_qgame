@@ -1,4 +1,4 @@
-package gotg
+package api
 
 type InlineKeyboardButton struct {
 	Text string `json:"text"`
