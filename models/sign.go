@@ -1,22 +1,26 @@
 package models
 
-//EmptyField is a location, which does not contain any game objects
-type EmptyField struct {
-	X, Y          int
+type Sign struct {
 	ObjectName    string `json:"object_name"`
 	Repeatable    bool   `json:"constantly"` //player can use repeatedly
 	OccupiedField bool   `json:"occupied_field"`
+	StopMove      bool   `json:"stop_move"` //Changes the Player speed parameter.
+	Message       string `json:"message"`   //
+	X             int
+	Y             int
 	SmallPic      string `json:"small_pic"` //path to pic
 	BigPic        string `json:"big_pic"`
 }
 
 //GetLocation returns x and y
-func (ef *EmptyField) GetLocation() (int, int) {
-	return ef.X, ef.Y
+func (sn *Sign) GetLocation() (int, int) {
+	return sn.X, sn.Y
 }
 
 //Interact just allows player to step onto this location
-func (ef *EmptyField) Interact(player *Player) {
-	player.X = ef.X
-	player.Y = ef.Y
+func (sn *Sign) Interact(player *Player) {
+	if sn.OccupiedField == true {
+		player.X = sn.X
+		player.Y = sn.Y
+	}
 }

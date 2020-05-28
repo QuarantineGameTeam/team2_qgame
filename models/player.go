@@ -2,7 +2,23 @@ package models
 
 //Player stores all information related to the ward of the user and its behaviour
 type Player struct {
-	X, Y int
+	X, Y       int
+	ObjectName string `json:"object_name"`
+	Message    string `json:"message"` //
+	PlayerId   int    `json:"player_id"`
+	SmallPic   string `json:"small_pic"` //path to pic
+	BigPic     string `json:"big_pic"`
+	//
+	Health     int `json:"health"`
+	Dexterity  int `json:"dexterity"`
+	Mastery    int `json:"mastery"`
+	Damage     int `json:"speed"`
+	Visibility int `json:"visibility"`
+}
+
+//GetLocation returns x and y
+func (p *Player) GetLocation() (int, int) {
+	return p.X, p.Y
 }
 
 //InteractWith makes player interact with game object on the location
