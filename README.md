@@ -1,3 +1,3 @@
-#CandyWarGO
+# CandyWarGO
 
 Eat candies and conquer!

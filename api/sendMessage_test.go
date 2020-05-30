@@ -2,9 +2,6 @@ package api
 
 import "testing"
 
-const token = "1285255270:SOME-CORRECT-TOKEN"
-const sendToID = 123456789 // some correct user/chat id
-
 func TestClient_SendMessage(t *testing.T) {
 	type fields struct {
 		token string
@@ -20,18 +17,18 @@ func TestClient_SendMessage(t *testing.T) {
 	}{
 		{
 			"Raw message",
-			fields{token},
+			fields{"1285255270:SomeCorrectToken"},
 			args{Message{
-				ChatID: sendToID,
+				ChatID: 123456789,
 				Text:   "Hello, it's a raw text.",
 			}},
 			false,
 		},
 		{
 			"Message with markup",
-			fields{token},
+			fields{"1285255270:SomeCorrectToken"},
 			args{Message{
-				ChatID: sendToID,
+				ChatID: 123456789,
 				Text:   "Hello, it's text with inline markup.",
 				InlineMarkup: InlineKeyboardMarkup{
 					[][]InlineKeyboardButton{
@@ -52,7 +49,6 @@ func TestClient_SendMessage(t *testing.T) {
 			}},
 			false,
 		},
-		// TODO: Message with photo test
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

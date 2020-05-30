@@ -9,5 +9,4 @@ type Message struct {
 	ChatID       int
 	Text         string
 	InlineMarkup InlineKeyboardMarkup
-	Photo        string
 }

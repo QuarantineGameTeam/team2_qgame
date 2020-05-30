@@ -27,8 +27,6 @@ func (c *Client) SendMessage(m Message) error {
 		req.Add("reply_markup", m.InlineMarkup.stringify())
 	}
 
-	// TODO: if message has photo entity
-
 	query := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage?", c.token) + req.Encode()
 	resp, err := http.Get(query)
 

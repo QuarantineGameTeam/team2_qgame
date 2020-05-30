@@ -5,7 +5,6 @@ package api
 	Cannot be used as message to send.
 	For that, please refer to Message.
  */
-
 type UpdateMessage struct {
 	MessageID int `json:"message_id"`
 	User User `json:"from"`
