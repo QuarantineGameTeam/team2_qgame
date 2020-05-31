@@ -36,3 +36,12 @@ func (c *Client) SetToken(token string) error {
 	}
 	return errors.New(string(bytes))
 }
+
+func NewClient(token string) (c *Client, err error) {
+	c = new(Client)
+	err = c.SetToken(token)
+	if err != nil {
+		return &Client{}, err
+	}
+	return
+}
