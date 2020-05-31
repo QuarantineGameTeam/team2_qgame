@@ -5,6 +5,11 @@ import (
 )
 
 func main() {
+	drawing()
+}
+
+func drawing() {
+
 	dc := gg.NewContext(30, 30)
 	dc.DrawCircle(15, 15, 15)
 	dc.SetRGB(0, 200, 0)
@@ -25,12 +30,6 @@ func main() {
 	dc.DrawPoint(11, 11, 11)
 	dc.SetRGB(0, 200, 0)
 	dc.Fill()
-
-	dc.DrawPoint(10, 10, 10)
-	dc.SetRGB(170, 190, 0)
-	dc.Fill()
-
-	dc.DrawPoint(9, 9, 9)
 	dc.SetRGB(0, 200, 0)
 	dc.Fill()
 
