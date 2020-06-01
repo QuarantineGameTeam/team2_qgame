@@ -5,7 +5,8 @@ package api
  */
 type Update struct{
 	UpdateID int `json:"update_id"`
-	Message UpdateMessage
+	Message UpdateMessage `json:"message"`
+	CallBackQuery CallBackQuery `json:"callback_query"`
 }
 
 func (u *Update) HasMessage() bool{
