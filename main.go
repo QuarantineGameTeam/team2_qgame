@@ -12,6 +12,7 @@ var (
 )
 
 func main() {
+	// Setting up telegram bot client
 	var err error
 	client, err = api.NewClient(botToken)
 	if err != nil {

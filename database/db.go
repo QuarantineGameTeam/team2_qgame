@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"qgame/api"
+	"team2_qgame/api"
 
 	//import sqlite driver
 	_ "github.com/mattn/go-sqlite3"
@@ -27,9 +27,10 @@ func (dbh *DBHandler) Connect() {
 
 //CreateUsersTable creates a table of Users with two fields, if one does not already exist
 func (dbh *DBHandler) CreateUsersTable() {
-	_, err := dbh.Connection.Exec(`CREATE TABLE IF NOT EXISTS users (
-		telegram_id UNIQUE INTEGER PRIMARY KEY, 
-		nickname TEXT);`)
+	_, err := dbh.Connection.Exec(
+		`CREATE TABLE IF NOT EXISTS users (
+    		   		telegram_id INTEGER UNIQUE PRIMARY KEY,
+    				nickname TEXT);`)
 	if err != nil {
 		panic(err)
 	}
@@ -38,15 +39,15 @@ func (dbh *DBHandler) CreateUsersTable() {
 //InsertUser adds a user to the Users table
 func (dbh *DBHandler) InsertUser(user api.User) {
 	//User structure is described in the api package file user.go
-	_, err := dbh.Connection.Exec("INSERT INTO users (telegram_id, nickname) VALUES (?, ?);", user.ID, user.Username)
+	_, err := dbh.Connection.Exec(`INSERT INTO users (telegram_id, nickname) VALUES (?, ?);`, user.ID, user.Username)
 	if err != nil {
 		panic(err)
 	}
 }
 
 //UpdateUser updates user with specified id
-func (dbh *DBHandler) UpdateUser(user api.User) {
-	_, err := dbh.Connection.Exec("UPDATE users SET nickname = ? WHERE telegram_id = ?;", user.Username, user.ID)
+func (dbh *DBHandler) UpdateUser(user api.User, newNickname string) {
+	_, err := dbh.Connection.Exec(`UPDATE users SET nickname = ? WHERE telegram_id = ?;`, newNickname, user.ID)
 	if err != nil {
 		panic(err)
 	}
@@ -54,7 +55,20 @@ func (dbh *DBHandler) UpdateUser(user api.User) {
 
 //NameExists returns true if a user with the same name is already registered
 func (dbh *DBHandler) NameExists(name string) bool {
-	result, err := dbh.Connection.Query("SELECT * FROM users WHERE nickname = ?;", name)
+	result, err := dbh.Connection.Query(`SELECT * FROM users WHERE nickname = ?;`, name)
+	if err != nil {
+		panic(err)
+	}
+	defer result.Close()
+	if result.Next() {
+		return true
+	}
+	return false
+}
+
+//NameExists returns true if a user with the same name is already registered
+func (dbh *DBHandler) ContainsUser(user api.User) bool {
+	result, err := dbh.Connection.Query(`SELECT * FROM users WHERE telegram_id = ?;`, user.ID)
 	if err != nil {
 		panic(err)
 	}
@@ -68,7 +82,7 @@ func (dbh *DBHandler) NameExists(name string) bool {
 //GetUserByID returns api.User object from database with specified id
 func (dbh *DBHandler) GetUserByID(id int) *api.User {
 	var user *api.User
-	result, err := dbh.Connection.Query("SELECT * FROM users WHERE telegram_id = ?;", id)
+	result, err := dbh.Connection.Query(`SELECT * FROM users WHERE telegram_id = ?;`, id)
 	if err != nil {
 		panic(err)
 	}
