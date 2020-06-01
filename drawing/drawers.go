@@ -4,10 +4,6 @@ import (
 	"gopkg.in/fogleman/gg.v1"
 )
 
-func main() {
-	drawing()
-}
-
 func drawing() {
 
 	dc := gg.NewContext(30, 30)
