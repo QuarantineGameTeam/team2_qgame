@@ -11,7 +11,7 @@ func TestClient_GetUpdates(t *testing.T) {
 	lastUpdate := 0
 
 	client := &Client{
-		"1285255270:SomeCorrectToken",
+		"1285255270:",
 	}
 
 	// terminates after receiving 10 updates
