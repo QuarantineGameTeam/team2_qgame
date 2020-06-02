@@ -40,3 +40,13 @@ func (mn *Monster) Update(player *Player) {
 	player.Dexterity = player.Dexterity + mn.BonusDexterity
 	player.Mastery = player.Mastery + mn.BonusMastery
 }
+
+//return SmallPic Path
+func (mn *Monster) GetSmallPic() string {
+	return mn.SmallPic
+}
+
+//return BigPic Path
+func (mn *Monster) GetBigPic() string {
+	return mn.BigPic
+}

@@ -25,3 +25,13 @@ func (ef *EmptyField) Interact(player *Player) {
 func (ef *EmptyField) Update(player *Player) {
 
 }
+
+//return SmallPic Path
+func (ef *EmptyField) GetSmallPic() string {
+	return ef.SmallPic
+}
+
+//return BigPic Path
+func (ef *EmptyField) GetBigPic() string {
+	return ef.BigPic
+}

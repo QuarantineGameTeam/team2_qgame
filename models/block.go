@@ -28,5 +28,14 @@ func (bl *Block) Interact(player *Player) {
 
 //score update (adds some resources and bonuses from game objects)
 func (bl *Block) Update(player *Player) {
+}
 
+//return SmallPic Path
+func (bl *Block) GetSmallPic() string {
+	return bl.SmallPic
+}
+
+//return BigPic Path
+func (bl *Block) GetBigPic() string {
+	return bl.BigPic
 }

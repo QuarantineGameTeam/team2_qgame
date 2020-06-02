@@ -4,6 +4,8 @@ package models
 type Location interface {
 	GetLocation() (int, int) //returns x and y locations
 	Interact(player *Player) //location event on Player moves on it
+	GetSmallPic() string     //return SmallPic Path
+	GetBigPic() string       //return BigPic Path
 }
 type Score interface {
 	Update(player *Player) //score update (adds some resources from factories and other bonuses)

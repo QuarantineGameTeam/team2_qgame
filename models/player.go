@@ -30,3 +30,13 @@ func (p *Player) GetLocation() (int, int) {
 func (p *Player) InteractWith(location *Location) {
 	(*location).Interact(p)
 }
+
+//return SmallPic Path
+func (p *Player) GetSmallPic() string {
+	return p.SmallPic
+}
+
+//return BigPic Path
+func (p *Player) GetBigPic() string {
+	return p.BigPic
+}

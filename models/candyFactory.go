@@ -42,3 +42,13 @@ func (cf *CandyFactory) Update(player *Player) {
 	player.ScoreCandy = player.ScoreCandy + cf.BonusCandy
 	player.ScoreGold = player.ScoreGold + cf.BonusGold
 }
+
+//return SmallPic Path
+func (cf *CandyFactory) GetSmallPic() string {
+	return cf.SmallPic
+}
+
+//return BigPic Path
+func (cf *CandyFactory) GetBigPic() string {
+	return cf.BigPic
+}

@@ -30,3 +30,13 @@ func (sn *Sign) Interact(player *Player) {
 func (sn *Sign) Update(player *Player) {
 
 }
+
+//return SmallPic Path
+func (sn *Sign) GetSmallPic() string {
+	return sn.SmallPic
+}
+
+//return BigPic Path
+func (sn *Sign) GetBigPic() string {
+	return sn.BigPic
+}

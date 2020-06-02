@@ -31,3 +31,13 @@ func (cp *CoffeePoint) Interact(player *Player) {
 func (cp *CoffeePoint) Update(player *Player) {
 	player.Health = cp.BonusHealth //maximum allowed value = Health of Player at start
 }
+
+//return SmallPic Path
+func (cp *CoffeePoint) GetSmallPic() string {
+	return cp.SmallPic
+}
+
+//return BigPic Path
+func (cp *CoffeePoint) GetBigPic() string {
+	return cp.BigPic
+}

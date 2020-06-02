@@ -52,3 +52,13 @@ func (sh *SweetHome) Update(player *Player) {
 	player.ScoreCandy = player.ScoreCandy + sh.BonusCandy
 	player.Health = sh.BonusHealth //maximum allowed value = Health of Player at start
 }
+
+//return SmallPic Path
+func (sh *SweetHome) GetSmallPic() string {
+	return sh.SmallPic
+}
+
+//return BigPic Path
+func (sh *SweetHome) GetBigPic() string {
+	return sh.BigPic
+}

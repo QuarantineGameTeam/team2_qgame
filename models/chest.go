@@ -31,3 +31,13 @@ func (ch *Chest) Interact(player *Player) {
 func (ch *Chest) Update(player *Player) {
 	player.Mastery = player.Mastery + ch.AddMasteryLevel
 }
+
+//return SmallPic Path
+func (ch *Chest) GetSmallPic() string {
+	return ch.SmallPic
+}
+
+//return BigPic Path
+func (ch *Chest) GetBigPic() string {
+	return ch.BigPic
+}
