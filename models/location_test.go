@@ -33,6 +33,6 @@ func TestLocation_Interact(t *testing.T) {
 			if x != tt.wantX || y != tt.wantY {
 				t.Errorf("got Player(%d,%d), want Player(%d,%d)", x, y, tt.wantX, tt.wantY)
 			}
-		})
+		}
 	}
 }

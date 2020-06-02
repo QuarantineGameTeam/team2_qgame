@@ -8,12 +8,17 @@ type Player struct {
 	PlayerId   int    `json:"player_id"`
 	SmallPic   string `json:"small_pic"` //path to pic
 	BigPic     string `json:"big_pic"`
+	Active     bool   `json:"active"` //if active = true, then drawing on the map and use the functional
 	//
 	Health     int `json:"health"`
 	Dexterity  int `json:"dexterity"`
 	Mastery    int `json:"mastery"`
 	Damage     int `json:"speed"`
 	Visibility int `json:"visibility"`
+	//score
+	ScoreCake  int `json:"bonus_cake"`
+	ScoreGold  int `json:"bonus_gold"`
+	ScoreCandy int `json:"bonus_candy"`
 }
 
 //GetLocation returns x and y

@@ -2,10 +2,11 @@ package models
 
 type SweetHome struct {
 	ObjectName    string `json:"object_name"`
-	Repeatable    bool   `json:"constantly"` //player can use repeatedly
-	OccupiedField bool   `json:"occupied_field"`
-	StopMove      bool   `json:"stop_move"` //Changes the Player speed parameter.
-	Message       string `json:"message"`   //
+	Repeatable    bool   `json:"constantly"`     //player can use repeatedly
+	OccupiedField bool   `json:"occupied_field"` //If true -player can occupie this field
+	StopMove      bool   `json:"stop_move"`      //Changes the Player speed parameter.
+	Message       string `json:"message"`        //
+	Active        bool   `json:"active"`         //if active = true, then drawing on the map and use the functional
 	X             int
 	Y             int
 	Owner         int    `json:"owner_id"`  //player Id
@@ -42,4 +43,12 @@ func (sh *SweetHome) Interact(player *Player) {
 		player.X = sh.X
 		player.Y = sh.Y
 	}
+}
+
+//score update (adds some resources and bonuses from game objects)
+func (sh *SweetHome) Update(player *Player) {
+	player.ScoreCake = player.ScoreCake + sh.BonusCake
+	player.ScoreGold = player.ScoreGold + sh.BonusGold
+	player.ScoreCandy = player.ScoreCandy + sh.BonusCandy
+	player.Health = sh.BonusHealth //maximum allowed value = Health of Player at start
 }

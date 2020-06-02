@@ -2,10 +2,11 @@ package models
 
 type CandyFactory struct {
 	ObjectName    string `json:"object_name"`
-	Repeatable    bool   `json:"constantly"` //player can use repeatedly
-	OccupiedField bool   `json:"occupied_field"`
-	StopMove      bool   `json:"stop_move"` //Changes the Player speed parameter.
-	Message       string `json:"message"`   //
+	Repeatable    bool   `json:"constantly"`     //player can use repeatedly
+	OccupiedField bool   `json:"occupied_field"` //If true -player can occupie this field
+	StopMove      bool   `json:"stop_move"`      //Changes the Player speed parameter.
+	Message       string `json:"message"`        //
+	Active        bool   `json:"active"`         //if active = true, then drawing on the map and use the functional
 	X             int
 	Y             int
 	Owner         int    `json:"owner_id"`  //player Id
@@ -34,4 +35,10 @@ func (cf *CandyFactory) Interact(player *Player) {
 		player.X = cf.X
 		player.Y = cf.Y
 	}
+}
+
+//score update (adds some resources and bonuses from game objects)
+func (cf *CandyFactory) Update(player *Player) {
+	player.ScoreCandy = player.ScoreCandy + cf.BonusCandy
+	player.ScoreGold = player.ScoreGold + cf.BonusGold
 }

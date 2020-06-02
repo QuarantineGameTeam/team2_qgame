@@ -4,9 +4,9 @@ package models
 type EmptyField struct {
 	X, Y          int
 	ObjectName    string `json:"object_name"`
-	Repeatable    bool   `json:"constantly"` //player can use repeatedly
-	OccupiedField bool   `json:"occupied_field"`
-	SmallPic      string `json:"small_pic"` //path to pic
+	Repeatable    bool   `json:"constantly"`     //player can use repeatedly
+	OccupiedField bool   `json:"occupied_field"` //If true -player can occupie this field
+	SmallPic      string `json:"small_pic"`      //path to pic
 	BigPic        string `json:"big_pic"`
 }
 
@@ -19,4 +19,9 @@ func (ef *EmptyField) GetLocation() (int, int) {
 func (ef *EmptyField) Interact(player *Player) {
 	player.X = ef.X
 	player.Y = ef.Y
+}
+
+//score update (adds some resources from factories and other bonuses)
+func (ef *EmptyField) Update(player *Player) {
+
 }

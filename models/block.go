@@ -6,6 +6,7 @@ type Block struct {
 	OccupiedField bool   `json:"occupied_field"`
 	StopMove      bool   `json:"stop_move"` //Changes the Player speed parameter.
 	Message       string `json:"message"`   //You tried to overcome this obstacle, but the forces left you and you remained in the same place
+	Active        bool   `json:"active"`    //if active = true, then drawing on the map and use the functional
 	X             int
 	Y             int
 	SmallPic      string `json:"small_pic"` //path to pic
@@ -23,4 +24,9 @@ func (bl *Block) Interact(player *Player) {
 		player.X = bl.X
 		player.Y = bl.Y
 	}
+}
+
+//score update (adds some resources and bonuses from game objects)
+func (bl *Block) Update(player *Player) {
+
 }
