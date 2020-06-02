@@ -12,14 +12,14 @@ func TestLocation_Interact(t *testing.T) {
 		wantX, wantY int
 	}{
 		{
-			Player{2, 4},
-			&EmptyField{2, 5},
+			Player{2, 4, "Player1", "Soprano's Clan", 1, "png", "PNG", 100, 100, 100, 100, 100},
+			&EmptyField{2, 5, "Road", true, true, "png", "PNG"},
 			2,
 			5,
 		},
 		{
-			Player{10, 5},
-			&EmptyField{11, 5},
+			Player{10, 5, "Player2", "Roshen's Clan", 1, "a", "A", 100, 100, 100, 100, 100},
+			&EmptyField{11, 5, "Road", true, true, "png", "PNG"},
 			11,
 			5,
 		},
@@ -33,6 +33,6 @@ func TestLocation_Interact(t *testing.T) {
 			if x != tt.wantX || y != tt.wantY {
 				t.Errorf("got Player(%d,%d), want Player(%d,%d)", x, y, tt.wantX, tt.wantY)
 			}
-		})
-	}
+		}
+	})
 }
