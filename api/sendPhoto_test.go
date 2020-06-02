@@ -1,6 +1,8 @@
 package api
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestClient_SendPhoto(t *testing.T) {
 	type fields struct {
@@ -17,13 +19,24 @@ func TestClient_SendPhoto(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			"Sending photo",
+			"Sending non-existing photo",
 			fields{
-				"1285255270:SomeCorrectToken",
+				testToken,
 			},
 			args{
-				662834330,
-				"/some/path",
+				testSendToID,
+				"/some/wrong/path",
+			},
+			true,
+		},
+		{
+			"Sending existing photo",
+			fields{
+				testToken,
+			},
+			args{
+				testSendToID,
+				"/some/correct/path",
 			},
 			false,
 		},
