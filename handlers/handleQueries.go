@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"log"
 	"strings"
-	"team2_qgame/api"
 )
 
 var (
