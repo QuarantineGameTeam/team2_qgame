@@ -10,6 +10,12 @@ import (
 	"strconv"
 )
 
+/*
+	in: offset -> first shown update id (if exists)
+	out: array of Update
+
+	processes every update coming to bot in chronological order
+ */
 func (c *Client) GetUpdates(offset int) []Update{
 	var response Response
 
