@@ -4,7 +4,7 @@ const (
 	//Driver is a name of db driver (requires go get github.com/mattn/go-sqlite3)
 	Driver = "sqlite3"
 	//Path is a path to file with database
-	Path = "database/CandyWarGoDatabase.sqlite"
+	Path = "D:/CandyWarGoDatabase.sqlite"
 )
 
 //NewDBHandler returns pointer to the default ready to use DBHandler
@@ -14,6 +14,6 @@ func NewDBHandler() *DBHandler {
 		DBPath:     Path,
 	}
 	dbh.Connect()
-	dbh.CreateUsersTable()
+	dbh.CreateTables()
 	return dbh
 }

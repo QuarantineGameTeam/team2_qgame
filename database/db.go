@@ -25,6 +25,11 @@ func (dbh *DBHandler) Connect() {
 	}
 }
 
+//CreateTables is a shortcut to create all necessary tables
+func (dbh *DBHandler) CreateTables() {
+	dbh.CreateUsersTable()
+}
+
 //CreateUsersTable creates a table of Users with two fields, if one does not already exist
 func (dbh *DBHandler) CreateUsersTable() {
 	_, err := dbh.Connection.Exec(
@@ -48,7 +53,8 @@ func (dbh *DBHandler) InsertUser(user api.User) {
 
 //Update updates any field in any table with new value
 func (dbh *DBHandler) Update(table, field string, value interface{}, whereField string, whereValue interface{}) {
-	_, err := dbh.Connection.Exec(`UPDATE ? SET ? = ? WHERE ? = ?`, table, field, value, whereField, whereValue)
+	statement := fmt.Sprintf(`UPDATE %s SET %s = ? WHERE %s = ?;`, table, field, whereField)
+	_, err := dbh.Connection.Exec(statement, value, whereValue)
 	if err != nil {
 		panic(err)
 	}
@@ -82,7 +88,7 @@ func (dbh *DBHandler) ContainsUser(user api.User) bool {
 
 //GetUserByID returns api.User object from database with specified id
 func (dbh *DBHandler) GetUserByID(id int) *api.User {
-	var user *api.User
+	var user *api.User = &api.User{}
 	result, err := dbh.Connection.Query(`SELECT * FROM users WHERE telegram_id = ?;`, id)
 	if err != nil {
 		panic(err)
@@ -92,7 +98,6 @@ func (dbh *DBHandler) GetUserByID(id int) *api.User {
 		err := result.Scan(&user.ID, &user.Username, &user.State)
 		if err != nil {
 			fmt.Println(err)
-			user = &api.User{}
 		}
 	}
 	return user
