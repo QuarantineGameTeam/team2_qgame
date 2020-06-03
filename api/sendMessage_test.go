@@ -1,6 +1,8 @@
 package api
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestClient_SendMessage(t *testing.T) {
 	type fields struct {
@@ -17,18 +19,18 @@ func TestClient_SendMessage(t *testing.T) {
 	}{
 		{
 			"Raw message",
-			fields{"1285255270:SomeCorrectToken"},
+			fields{testToken},
 			args{Message{
-				ChatID: 123456789,
+				ChatID: testSendToID,
 				Text:   "Hello, it's a raw text.",
 			}},
 			false,
 		},
 		{
 			"Message with markup",
-			fields{"1285255270:SomeCorrectToken"},
+			fields{testToken},
 			args{Message{
-				ChatID: 123456789,
+				ChatID: testSendToID,
 				Text:   "Hello, it's text with inline markup.",
 				InlineMarkup: InlineKeyboardMarkup{
 					[][]InlineKeyboardButton{
