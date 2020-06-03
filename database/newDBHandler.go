@@ -14,6 +14,6 @@ func NewDBHandler() *DBHandler {
 		DBPath:     Path,
 	}
 	dbh.Connect()
-	dbh.CreateUsersTable()
+	dbh.CreateTables()
 	return dbh
 }
