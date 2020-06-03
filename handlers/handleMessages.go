@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/database"
 	"log"
-	"team2_qgame/api"
-	"team2_qgame/database"
 )
 
 func handleUpdateMessage(client *api.Client, update api.Update) {

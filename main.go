@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/handlers"
 	"log"
-	"team2_qgame/api"
-	"team2_qgame/handlers"
 	"time"
 )
 

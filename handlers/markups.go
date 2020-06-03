@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/api"
 )
 
 func startMarkup(message api.UpdateMessage) api.InlineKeyboardMarkup{

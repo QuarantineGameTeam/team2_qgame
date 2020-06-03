@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/api"
 )
 
 func HandleUpdate(client *api.Client, update api.Update) {
