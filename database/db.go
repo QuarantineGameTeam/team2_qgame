@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/api"
 
 	//import sqlite driver
 	_ "github.com/mattn/go-sqlite3"
