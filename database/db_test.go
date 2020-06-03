@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"testing"
 )
 
