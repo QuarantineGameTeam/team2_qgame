@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/config"
 	"github.com/QuarantineGameTeam/team2_qgame/database"
 	"log"
 )
@@ -11,11 +12,12 @@ func handleUpdateMessage(client *api.Client, update api.Update) {
 	message := update.Message
 	if message.Text == "/start" {
 		handleStartMessage(client, message)
+	} else if message.FromUser.State == config.StateChangingName {
+		handleChangeNickNameMessage(client, message)
 	}
 }
 
 func handleStartMessage(client *api.Client, message api.UpdateMessage) {
-	// Setting up database handler
 	dbh := database.NewDBHandler()
 
 	var err error
@@ -39,4 +41,11 @@ func handleStartMessage(client *api.Client, message api.UpdateMessage) {
 	if err != nil {
 		log.Println(err)
 	}
+}
+
+func handleChangeNickNameMessage(client *api.Client, message api.UpdateMessage) {
+	dbh := database.NewDBHandler()
+
+	dbh.Update("users", "nickname", message.Text, "telegram_id", message.FromUser.ID)
+	dbh.Update("users", "state", config.StateNone, "telegram_id", message.FromUser.ID)
 }

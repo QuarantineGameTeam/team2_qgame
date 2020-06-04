@@ -1,8 +1,11 @@
-package main
+package config
 
 const (
-	botToken = "1285255270:AAFdQW1_ygN6CxQU8DzRBHLS3YLaKswLdqY"
+	BotToken = "1285255270:AAFdQW1_ygN6CxQU8DzRBHLS3YLaKswLdqY"
+)
 
+// Separated in order to make iotas work properly
+const (
 	//User state constants
 	StateNone         = iota // no interaction possible at all
 	StateAFK          = iota // passive state for user

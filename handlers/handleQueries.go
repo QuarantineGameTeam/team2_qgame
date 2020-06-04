@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/config"
+	"github.com/QuarantineGameTeam/team2_qgame/database"
 	"log"
 	"strings"
 )
@@ -14,18 +16,30 @@ func handleUpdateCallBackQuery(client *api.Client, update api.Update) {
 	handleMainMenuQueries(client, update.CallBackQuery)
 }
 
-func handleMainMenuQueries(c *api.Client, q api.CallBackQuery) {
+func handleMainMenuQueries(client *api.Client, query api.CallBackQuery) {
 	var err error
 
-	if startsWith(q.CallBackData, "joingame") {
-		err = c.AnswerCallBackQuery(q, "Joining the game, please wait...", false)
-	} else if startsWith(q.CallBackData, "stats") {
-		err = c.AnswerCallBackQuery(q, "Stats...", true)
-	} else if startsWith(q.CallBackData, "changenickname") {
-		err = c.AnswerCallBackQuery(q, "OK. Type in your nickname.", false)
+	if startsWith(query.CallBackData, "joingame") {
+		err = client.AnswerCallBackQuery(query, "Joining the game, please wait...", false)
+	} else if startsWith(query.CallBackData, "stats") {
+		err = client.AnswerCallBackQuery(query, "Stats...", true)
+	} else if startsWith(query.CallBackData, "changenickname") {
+		handleChangeNickNameQuery(client, query)
 	}
 
 	if err != nil {
 		log.Println(err)
 	}
+
+}
+
+func handleChangeNickNameQuery(client *api.Client, query api.CallBackQuery) {
+	dbh := database.NewDBHandler()
+
+	err := client.AnswerCallBackQuery(query, "OK. Type in your nickname.", false)
+	if err != nil {
+		log.Println(err)
+	}
+
+	dbh.Update("users", "state", config.StateChangingName, "telegram_id", query.FromUser.ID)
 }
