@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"log"
 
 	//import sqlite driver
 	_ "github.com/mattn/go-sqlite3"
@@ -54,6 +55,28 @@ func (dbh *DBHandler) Update(table, field string, value interface{}, whereField 
 
 	return err
 }
+
+// GetField returns value of field in given table in respect to to some parameter
+func (dbh *DBHandler) GetField(table, field, whereField string, whereVal interface {}) interface{} {
+	result, err := dbh.Connection.Query(fmt.Sprintf(`SELECT %s FROM %s WHERE %s = ?;`, field, table, whereField), whereVal)
+
+	if err != nil {
+		log.Println(err)
+	}
+	defer result.Close()
+
+	var state int
+	if result.Next() {
+		err = result.Scan(&state)
+		if err != nil {
+			log.Println(err)
+			return 0
+		}
+	}
+
+	return state
+}
+
 
 //NameExists returns true if a user with the same name is already registered
 func (dbh *DBHandler) NameExists(name string) (bool, error) {

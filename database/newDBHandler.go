@@ -15,6 +15,6 @@ func NewDBHandler() (*DBHandler, error) {
 	}
 	err := dbh.Connect()
 	dbh.CreateTables()
-	
+
 	return dbh, err
 }

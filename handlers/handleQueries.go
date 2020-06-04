@@ -34,12 +34,18 @@ func handleMainMenuQueries(client *api.Client, query api.CallBackQuery) {
 }
 
 func handleChangeNickNameQuery(client *api.Client, query api.CallBackQuery) {
-	dbh := database.NewDBHandler()
-
-	err := client.AnswerCallBackQuery(query, "OK. Type in your nickname.", false)
+	dbh, err := database.NewDBHandler()
 	if err != nil {
 		log.Println(err)
 	}
 
-	dbh.Update("users", "state", config.StateChangingName, "telegram_id", query.FromUser.ID)
+	err = client.AnswerCallBackQuery(query, "OK. Type in your nickname.", false)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = dbh.Update("users", "state", config.StateChangingName, "telegram_id", query.FromUser.ID)
+	if err != nil {
+		log.Println(err)
+	}
 }
