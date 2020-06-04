@@ -15,6 +15,7 @@
         <method importPath="math/rand" receiver="*Rand" name="Read" />
         <method importPath="io" receiver="Closer" name="Close" />
         <method importPath="os" receiver="*File" name="Close" />
+        <method importPath="database/sql" receiver="*Rows" name="Close" />
       </methods>
     </inspection_tool>
   </profile>
