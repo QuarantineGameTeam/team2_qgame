@@ -1,6 +1,12 @@
 package api
 
+<<<<<<< HEAD
+import (
+	"testing"
+)
+=======
 import "testing"
+>>>>>>> f42b3f3afd86bec62aa8bc6a094df7066142ab24
 
 func TestClient_SendPhoto(t *testing.T) {
 	type fields struct {
@@ -17,6 +23,26 @@ func TestClient_SendPhoto(t *testing.T) {
 		wantErr bool
 	}{
 		{
+<<<<<<< HEAD
+			"Sending non-existing photo",
+			fields{
+				testToken,
+			},
+			args{
+				testSendToID,
+				"/some/wrong/path",
+			},
+			true,
+		},
+		{
+			"Sending existing photo",
+			fields{
+				testToken,
+			},
+			args{
+				testSendToID,
+				"/some/correct/path",
+=======
 			"Sending photo",
 			fields{
 				"1285255270:SomeCorrectToken",
@@ -24,6 +50,7 @@ func TestClient_SendPhoto(t *testing.T) {
 			args{
 				662834330,
 				"/some/path",
+>>>>>>> f42b3f3afd86bec62aa8bc6a094df7066142ab24
 			},
 			false,
 		},
@@ -38,4 +65,8 @@ func TestClient_SendPhoto(t *testing.T) {
 			}
 		})
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> f42b3f3afd86bec62aa8bc6a094df7066142ab24

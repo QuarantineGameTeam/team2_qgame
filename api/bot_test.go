@@ -1,6 +1,8 @@
 package api
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestClient_SetToken(t *testing.T) {
 	type args struct {
@@ -13,7 +15,7 @@ func TestClient_SetToken(t *testing.T) {
 	}{
 		{
 			"NormalTest",
-			args{"1285255270:SomeCorrectToken"},
+			args{testToken},
 			false,
 		},
 		{

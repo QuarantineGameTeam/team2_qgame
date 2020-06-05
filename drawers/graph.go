@@ -1,14 +1,21 @@
 package drawing
 
 import (
+	"fmt"
+	"github.com/QuarantineGameTeam/team2_qgame/models"
+	"gopkg.in/fogleman/gg.v1"
 	"image"
+	"image/color"
 	"log"
 	"os"
+<<<<<<< HEAD
 	"fmt"
 	"image/color"
 	"gopkg.in/fogleman/gg.v1"
 	"team2_qgame/models"
 	"github.com/nfnt/resize"
+=======
+>>>>>>> 1a425343bacda99671cda455e0525aa2ec4e858a
 )
 
 const (
@@ -52,7 +59,7 @@ func drawGrid(context *gg.Context, dimension int) {
 //NOTE 2: these 3 funcs are EXPORTED(will be used in main.go).
 
 //CreatePartViewPhoto draws a part-view map where objects are displayed on players horizon.
-func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCenterY, drawingHorizon int, saveTo string) {
+func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCenterY, drawingHorizon int, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
 	drawBackground(context, color.White)
 	horizon := 2*drawingHorizon+1
@@ -77,7 +84,7 @@ func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCen
 			}
 		}
 	}
-	context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
+	return context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
 }
 
 //CreateMapViewPhoto draws a full map but only areas that have been visited will be displayed.

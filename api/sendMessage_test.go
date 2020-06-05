@@ -1,6 +1,12 @@
 package api
 
+<<<<<<< HEAD
+import (
+	"testing"
+)
+=======
 import "testing"
+>>>>>>> f42b3f3afd86bec62aa8bc6a094df7066142ab24
 
 func TestClient_SendMessage(t *testing.T) {
 	type fields struct {
@@ -17,18 +23,30 @@ func TestClient_SendMessage(t *testing.T) {
 	}{
 		{
 			"Raw message",
+<<<<<<< HEAD
+			fields{testToken},
+			args{Message{
+				ChatID: testSendToID,
+=======
 			fields{"1285255270:SomeCorrectToken"},
 			args{Message{
 				ChatID: 123456789,
+>>>>>>> f42b3f3afd86bec62aa8bc6a094df7066142ab24
 				Text:   "Hello, it's a raw text.",
 			}},
 			false,
 		},
 		{
 			"Message with markup",
+<<<<<<< HEAD
+			fields{testToken},
+			args{Message{
+				ChatID: testSendToID,
+=======
 			fields{"1285255270:SomeCorrectToken"},
 			args{Message{
 				ChatID: 123456789,
+>>>>>>> f42b3f3afd86bec62aa8bc6a094df7066142ab24
 				Text:   "Hello, it's text with inline markup.",
 				InlineMarkup: InlineKeyboardMarkup{
 					[][]InlineKeyboardButton{

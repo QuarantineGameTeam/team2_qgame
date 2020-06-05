@@ -16,8 +16,10 @@ import (
 	or absence of rights to send the message.
 
 	Sends given message using Client' credentials
- */
+*/
 func (c *Client) SendMessage(m Message) error {
+	method := "/sendMessage"
+
 	req := url.Values{}
 	req.Add("chat_id", strconv.Itoa(m.ChatID))
 	req.Add("text", m.Text)
@@ -27,7 +29,7 @@ func (c *Client) SendMessage(m Message) error {
 		req.Add("reply_markup", m.InlineMarkup.stringify())
 	}
 
-	query := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage?", c.token) + req.Encode()
+	query := fmt.Sprintf("%s%s%s?", botEntry, c.token, method) + req.Encode()
 	resp, err := http.Get(query)
 
 	if err != nil {

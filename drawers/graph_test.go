@@ -1,32 +1,37 @@
 package drawing
 
 import (
+<<<<<<< HEAD
+=======
+	"github.com/QuarantineGameTeam/team2_qgame/models"
+>>>>>>> 1a425343bacda99671cda455e0525aa2ec4e858a
 	"testing"
 )
 
 func Test_scale(t *testing.T) {
 	tests := []struct {
-		name string
-		v1 float64
-		min1 float64
-		min2 float64
-		max1 float64
-		max2 float64
-		wantv2 float64
-	} {
+		name   string
+		v     float64
+		min1   float64
+		min2   float64
+		max1   float64
+		max2   float64
+		want float64
+		wantErr bool
+	}{
 		{
-		"positive", 2, 0, 0, 10, 100, 20,
-	},
-	{
-		"negative", 3, 0, 0, 10, 100, 40,
-	},
+			"positive", 2, 0, 0, 10, 100, 20, false,
+		},
+		{
+			"negative", 3, 0, 0, 10, 100, 40, true,
+		},
 	}
-	
+
 	for _, test := range tests {
-		t.Run (test.name, func(t *testing.T) {
-			v2 := test.min2+(test.max2-test.min2)*((test.v1-test.min1)/(test.max1-test.min1))
-			if v2 != test.wantv2 {
-				t.Errorf("got value 2 %v, want value 2 %v", v2, test.wantv2)
+		t.Run(test.name, func(t *testing.T) {
+			v2 := scale(test.v, test.min1, test.max1, test.min2, test.max2)
+			if (v2 == test.want) == test.wantErr {
+				t.Errorf("got value 2 %v, want value 2 %v", v2, test.want)
 			}
 		})
 	}
@@ -80,39 +85,26 @@ func Test_drawGrid(t *testing.T) {
 }
 
 func Test_CreatePartViewPhoto(t *testing.T) {
-	tests := []struct {
-		name string
-		locX, locY int
-		drawingcenterX int
-		drawingcenterY int
-		drawingHorizon int
-		wantonmap bool
-	}{
-		{
-		"photo test", 5, 2, 4, 3, 1, true,
-	}, 
+	locations := []models.Location {
+		&models.CandyFactory{
+			ObjectName: "cf1",
+			SmallPic: "photos/candy_factory.png",
+			X: 3, Y: 4,
+		},
+		&models.Chest {
+			ObjectName: "ch1",
+			SmallPic: "photos/chest.png",
+			X: 4, Y: 6,
+		},
 	}
 
-	var onmap bool
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			if test.locX >= (test.drawingcenterX - test.drawingHorizon) && test.locX <= (test.drawingcenterX + test.drawingHorizon) {
-				if test.locY >= (test.drawingcenterY - test.drawingHorizon) && test.locY <= (test.drawingcenterY + test.drawingHorizon) {
-					onmap = true
-				} else {
-					onmap = false
-				}
-			} else {
-				onmap = false
-			}
-			if onmap != test.wantonmap {
-				t.Errorf("want shown %t, have %t", test.wantonmap, onmap)
-			}
-		})
+	err := CreatePartViewPhoto(locations, 4, 4, 1, "test_part_view")
+	if err != nil {
+		t.Errorf("Expected nil error, got %v", err)
 	}
 }
 
+<<<<<<< HEAD
 func Test_CreateMapViewPhoto(t *testing.T) {
 	tests := []struct {
 		name string
@@ -181,3 +173,5 @@ func Test_CreateFullViewPhoto(t *testing.T) {
 		})
 	}
 }
+=======
+>>>>>>> 1a425343bacda99671cda455e0525aa2ec4e858a
