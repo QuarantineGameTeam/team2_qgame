@@ -8,6 +8,7 @@ import (
 	"image/color"
 	"gopkg.in/fogleman/gg.v1"
 	"team2_qgame/models"
+	"github.com/nfnt/resize"
 )
 
 const (
@@ -69,9 +70,10 @@ func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCen
 			log.Fatal(err)
 		}	//finally found a bit confusing but ok way to convert string to image.Image.
 		fmt.Println(name)	//tbh idk where to use string name. Just useless use for that type.
+		crop := resize.Resize(uint(scale(float64(locX), 0, float64(horizon*3), 0, s)), uint(scale(float64(locY), 0, float64(horizon*3), 0, s)), img, resize.Lanczos3)
 		if locX >= (drawingCenterX - drawingHorizon) && locX <= (drawingCenterX + drawingHorizon) {
 			if locY >= (drawingCenterY - drawingHorizon) && locY <= (drawingCenterY + drawingHorizon) {
-				context.DrawImage(img, int(scale(float64(locX), 0, float64(horizon*3), 0, s)), int(scale(float64(locY), 0, float64(horizon*3), 0, s)))
+				context.DrawImage(crop, int(scale(float64(locX), 0, float64(horizon*3), 0, s)), int(scale(float64(locY), 0, float64(horizon*3), 0, s)))
 			}
 		}
 	}
@@ -95,9 +97,12 @@ func CreateMapViewPhoto(locations []models.Location, visited[][]bool, saveTo str
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(name) 
+		fmt.Println(name)
+
+		crop := resize.Resize(uint(scale(float64(locX), 0, float64(defaultDimension), 0, s)), uint(scale(float64(locY), 0, float64(defaultDimension), 0, s)), img, resize.Lanczos3)
+
 		if visited[locX][locY] == true {
-			context.DrawImage(img, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
+			context.DrawImage(crop, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
 		}
 	}
 	context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
@@ -121,7 +126,10 @@ func CreateFullViewPhoto(locations []models.Location, saveTo string) {
 			log.Fatal(err)
 		}
 		fmt.Println(name)
-		context.DrawImage(img, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
+
+		crop := resize.Resize(uint(scale(float64(locX), 0, float64(defaultDimension), 0, s)), uint(scale(float64(locY), 0, float64(defaultDimension), 0, s)), img, resize.Lanczos3)
+
+		context.DrawImage(crop, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
 	}
 	context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
 }
