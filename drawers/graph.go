@@ -73,7 +73,27 @@ func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCen
 		crop := resize.Resize(uint(s)/3, uint(s)/3, img, resize.Lanczos3)
 		if locX >= (drawingCenterX - drawingHorizon) && locX <= (drawingCenterX + drawingHorizon) {
 			if locY >= (drawingCenterY - drawingHorizon) && locY <= (drawingCenterY + drawingHorizon) {
-				context.DrawImage(crop, int(scale(float64(locX), 0, float64(horizon*3), 0, s)), int(scale(float64(locY), 0, float64(horizon*3), 0, s)))
+				if locX > drawingCenterX && locY > drawingCenterY {
+					context.DrawImage(crop, int(s)*2/3, int(s)*2/3)
+				} else if locX == drawingCenterX && locY > drawingCenterY {
+					context.DrawImage(crop, int(s)/3, int(s)*2/3)
+				} else if locX < drawingCenterX && locY > drawingCenterY {
+					context.DrawImage(crop, 0, int(s)*2/3)
+				} else if locX > drawingCenterX && locY == drawingCenterY {
+					context.DrawImage(crop, int(s)*2/3, int(s)/3)
+				} else if locX > drawingCenterX && locY < drawingCenterY {
+					context.DrawImage(crop, int(s)*2/3, 0)
+				} else if locX == drawingCenterX && locY == drawingCenterY {
+					context.DrawImage(crop, int(s)/3, int(s)/3)
+				} else if locX == drawingCenterX && locY < drawingCenterY {
+					context.DrawImage(crop, int(s)/3, 0)
+				} else if locX < drawingCenterX && locY == drawingCenterY {
+					context.DrawImage(crop, 0, int(s)/3)
+				} else if locX < drawingCenterX && locY < drawingCenterY {
+					context.DrawImage(crop, 0, 0)
+				}
+
+				
 			}
 		}
 	}
