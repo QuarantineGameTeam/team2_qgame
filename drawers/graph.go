@@ -8,14 +8,7 @@ import (
 	"image/color"
 	"log"
 	"os"
-<<<<<<< HEAD
-	"fmt"
-	"image/color"
-	"gopkg.in/fogleman/gg.v1"
-	"team2_qgame/models"
 	"github.com/nfnt/resize"
-=======
->>>>>>> 1a425343bacda99671cda455e0525aa2ec4e858a
 )
 
 const (

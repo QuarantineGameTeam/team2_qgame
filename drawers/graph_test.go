@@ -1,10 +1,7 @@
 package drawing
 
 import (
-<<<<<<< HEAD
-=======
 	"github.com/QuarantineGameTeam/team2_qgame/models"
->>>>>>> 1a425343bacda99671cda455e0525aa2ec4e858a
 	"testing"
 )
 
@@ -104,7 +101,6 @@ func Test_CreatePartViewPhoto(t *testing.T) {
 	}
 }
 
-<<<<<<< HEAD
 func Test_CreateMapViewPhoto(t *testing.T) {
 	tests := []struct {
 		name string
@@ -173,5 +169,3 @@ func Test_CreateFullViewPhoto(t *testing.T) {
 		})
 	}
 }
-=======
->>>>>>> 1a425343bacda99671cda455e0525aa2ec4e858a
