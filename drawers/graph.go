@@ -70,7 +70,7 @@ func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCen
 			log.Fatal(err)
 		}	//finally found a bit confusing but ok way to convert string to image.Image.
 		fmt.Println(name)	//tbh idk where to use string name. Just useless use for that type.
-		crop := resize.Resize(uint(scale(float64(locX), 0, float64(horizon*3), 0, s)), uint(scale(float64(locY), 0, float64(horizon*3), 0, s)), img, resize.Lanczos3)
+		crop := resize.Resize(uint(s)/3, uint(s)/3, img, resize.Lanczos3)
 		if locX >= (drawingCenterX - drawingHorizon) && locX <= (drawingCenterX + drawingHorizon) {
 			if locY >= (drawingCenterY - drawingHorizon) && locY <= (drawingCenterY + drawingHorizon) {
 				context.DrawImage(crop, int(scale(float64(locX), 0, float64(horizon*3), 0, s)), int(scale(float64(locY), 0, float64(horizon*3), 0, s)))
@@ -99,7 +99,7 @@ func CreateMapViewPhoto(locations []models.Location, visited[][]bool, saveTo str
 		}
 		fmt.Println(name)
 
-		crop := resize.Resize(uint(scale(float64(locX), 0, float64(defaultDimension), 0, s)), uint(scale(float64(locY), 0, float64(defaultDimension), 0, s)), img, resize.Lanczos3)
+		crop := resize.Resize(uint(s)/9, uint(s)/9, img, resize.Lanczos3)
 
 		if visited[locX][locY] == true {
 			context.DrawImage(crop, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
@@ -127,7 +127,7 @@ func CreateFullViewPhoto(locations []models.Location, saveTo string) {
 		}
 		fmt.Println(name)
 
-		crop := resize.Resize(uint(scale(float64(locX), 0, float64(defaultDimension), 0, s)), uint(scale(float64(locY), 0, float64(defaultDimension), 0, s)), img, resize.Lanczos3)
+		crop := resize.Resize(uint(s)/9, uint(s)/9, img, resize.Lanczos3)
 
 		context.DrawImage(crop, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
 	}
