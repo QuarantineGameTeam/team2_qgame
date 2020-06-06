@@ -2,8 +2,9 @@ package database
 
 import (
 	"fmt"
-	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"testing"
+
+	"github.com/QuarantineGameTeam/team2_qgame/api"
 )
 
 func TestDBHandler(t *testing.T) {
@@ -31,7 +32,7 @@ func TestDBHandler(t *testing.T) {
 	}
 
 	db, err := NewDBHandler()
-	if err != nil{
+	if err != nil {
 		t.Errorf("Got error: %v", err)
 	}
 	//Insert test
@@ -71,11 +72,11 @@ func TestDBHandler(t *testing.T) {
 		testname := fmt.Sprintf("Update user (%d, %s) to user (%d, %s)", tt.ID, tt.Username, tt.ID, newName)
 		t.Run(testname, func(t *testing.T) {
 			err := db.Update("users", "nickname", newName, "telegram_id", tt.ID)
-			if err != nil{
+			if err != nil {
 				t.Errorf("Got error: %v", err)
 			}
 			user, err := db.GetUserByID(tt.ID)
-			if user.Username != newName || err != nil{
+			if user.Username != newName || err != nil {
 				t.Errorf("got User (%d, %s, %d), want User (%d, %s, %d)", user.ID, user.Username, user.State, tt.ID, newName, tt.State)
 			}
 		})
