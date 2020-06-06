@@ -13,7 +13,8 @@ type Player struct {
 	Health     int `json:"health"`
 	Dexterity  int `json:"dexterity"`
 	Mastery    int `json:"mastery"`
-	Damage     int `json:"speed"`
+	Damage     int `json:"damage"`
+	Speed      int `json:"speed"`
 	Visibility int `json:"visibility"`
 	//score
 	ScoreCake  int `json:"bonus_cake"`
