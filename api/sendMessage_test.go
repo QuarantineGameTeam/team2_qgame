@@ -1,8 +1,6 @@
 package api
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestClient_SendMessage(t *testing.T) {
 	type fields struct {
