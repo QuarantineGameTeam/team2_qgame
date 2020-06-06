@@ -13,3 +13,6 @@
 
 # Database
 *.sqlite
+
+# Temporary files
+temp/
