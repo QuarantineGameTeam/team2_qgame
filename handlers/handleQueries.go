@@ -20,7 +20,7 @@ func handleMainMenuQueries(client *api.Client, query api.CallBackQuery) {
 	var err error
 
 	if startsWith(query.CallBackData, "joingame") {
-		err = client.AnswerCallBackQuery(query, "Joining the game, please wait...", false)
+		handleJoinGameQuery(client, query)
 	} else if startsWith(query.CallBackData, "stats") {
 		err = client.AnswerCallBackQuery(query, "Stats...", true)
 	} else if startsWith(query.CallBackData, "changenickname") {
@@ -33,13 +33,39 @@ func handleMainMenuQueries(client *api.Client, query api.CallBackQuery) {
 
 }
 
+func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
+	var err error
+
+	err = client.AnswerCallBackQuery(query, "OK", false)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = client.SendMessage(api.Message {
+		ChatID: query.FromUser.ID,
+		Text: "Now choose the clan, you want to play in",
+		InlineMarkup: chooseClanMarkup,
+	})
+	if err != nil {
+		log.Println(err)
+	}
+}
+
 func handleChangeNickNameQuery(client *api.Client, query api.CallBackQuery) {
 	dbh, err := database.NewDBHandler()
 	if err != nil {
 		log.Println(err)
 	}
 
-	err = client.AnswerCallBackQuery(query, "OK. Type in your nickname.", false)
+	err = client.AnswerCallBackQuery(query, "OK.", false)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = client.SendMessage(api.Message{
+		ChatID: query.FromUser.ID,
+		Text: "OK. Now send your new nickname.",
+	})
 	if err != nil {
 		log.Println(err)
 	}
