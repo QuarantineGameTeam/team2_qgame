@@ -135,9 +135,22 @@ func (dbh *DBHandler) NameExists(name string) (bool, error) {
 	return false, err
 }
 
-//ContainsUser returns true if a user with the same name is already registered
+//ContainsUser returns true if a user with the specified id is already registered
 func (dbh *DBHandler) ContainsUser(user api.User) (bool, error) {
 	result, err := dbh.Connection.Query(`SELECT * FROM users WHERE telegram_id = ?;`, user.ID)
+
+	if result != nil {
+		defer result.Close()
+		if result.Next() {
+			return true, err
+		}
+	}
+	return false, err
+}
+
+//ContainsPlayer returns true if a player with the specified id is already registered
+func (dbh *DBHandler) ContainsPlayer(player models.Player) (bool, error) {
+	result, err := dbh.Connection.Query(`SELECT * FROM players WHERE player_id = ?;`, player.PlayerId)
 
 	if result != nil {
 		defer result.Close()
