@@ -1,15 +1,9 @@
 package main
 
 import (
-<<<<<<< HEAD
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/handlers"
 	"log"
-=======
-	"log"
-	"team2_qgame/api"
-	"team2_qgame/handlers"
->>>>>>> f42b3f3afd86bec62aa8bc6a094df7066142ab24
 	"time"
 )
 
