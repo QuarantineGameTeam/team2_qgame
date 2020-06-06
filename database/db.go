@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/game"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 
 	//import sqlite driver
@@ -28,12 +29,20 @@ func (dbh *DBHandler) Connect() error {
 }
 
 //CreateTables is a shortcut to create all necessary tables
-func (dbh *DBHandler) CreateTables() {
-	dbh.CreateUsersTable()
-	dbh.CreateGamesTable()
+func (dbh *DBHandler) CreateTables() error {
+	err := dbh.CreateUsersTable()
+	if err != nil {
+		return err
+	}
+	err = dbh.CreatePlayersTable()
+	if err != nil {
+		return err
+	}
+	err = dbh.CreateGamesTable()
+	return err
 }
 
-//CreateUsersTable creates a table of Users with two fields, if one does not already exist
+//CreateUsersTable creates a table of Users if one does not already exist
 func (dbh *DBHandler) CreateUsersTable() error {
 	_, err := dbh.Connection.Exec(
 		`CREATE TABLE IF NOT EXISTS users (
@@ -43,10 +52,48 @@ func (dbh *DBHandler) CreateUsersTable() error {
 	return err
 }
 
+//CreatePlayersTable creates a table of Players if one does not already exist
+func (dbh *DBHandler) CreatePlayersTable() error {
+	_, err := dbh.Connection.Exec(
+		`CREATE TABLE IF NOT EXISTS players (
+    		   		player_id INTEGER PRIMARY KEY,
+					nickname TEXT,
+					message TEXT,
+					x INTEGER,
+					y INTEGER,
+					smallPic TEXT,
+					bigPic TEXT,
+					active INTEGER,
+					health INTEGER,
+					dexterity INTEGER,
+					mastery INTEGER,
+					damage INTEGER,
+					speed INTEGER,
+					visibility INTEGER,
+					candies INTEGER,
+					cakes INTEGER,
+					gold INTEGER,
+					FOREIGN KEY(player_id) REFERENCES users(telegram_id));`)
+	return err
+}
+
 //InsertUser adds a user to the Users table
 func (dbh *DBHandler) InsertUser(user api.User) error {
 	//User structure is described in the api package file user.go
 	_, err := dbh.Connection.Exec(`INSERT INTO users (telegram_id, nickname, state) VALUES (?, ?, ?);`, user.ID, user.Username, user.State)
+
+	return err
+}
+
+//InsertPlayer adds a user to the Users table
+func (dbh *DBHandler) InsertPlayer(player models.Player) error {
+	var active int = 0
+	if player.Active {
+		active = 1
+	}
+	_, err := dbh.Connection.Exec(`INSERT INTO players (player_id, nickname, message, x, y, smallPic, bigPic, active, health, dexterity, mastery, damage, speed, visibility, candies, cakes, gold) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`, player.PlayerId, player.ObjectName, player.Message, player.X, player.Y, player.SmallPic, player.BigPic, active, player.Health,
+		player.Dexterity, player.Mastery, player.Damage, player.Speed, player.Visibility, player.ScoreCandy, player.ScoreCake, player.ScoreGold)
 
 	return err
 }
@@ -93,9 +140,22 @@ func (dbh *DBHandler) NameExists(name string) (bool, error) {
 	return false, err
 }
 
-//ContainsUser returns true if a user with the same name is already registered
+//ContainsUser returns true if a user with the specified id is already registered
 func (dbh *DBHandler) ContainsUser(user api.User) (bool, error) {
 	result, err := dbh.Connection.Query(`SELECT * FROM users WHERE telegram_id = ?;`, user.ID)
+
+	if result != nil {
+		defer result.Close()
+		if result.Next() {
+			return true, err
+		}
+	}
+	return false, err
+}
+
+//ContainsPlayer returns true if a player with the specified id is already registered
+func (dbh *DBHandler) ContainsPlayer(player models.Player) (bool, error) {
+	result, err := dbh.Connection.Query(`SELECT * FROM players WHERE player_id = ?;`, player.PlayerId)
 
 	if result != nil {
 		defer result.Close()
@@ -111,7 +171,7 @@ func (dbh *DBHandler) GetUserByID(id int) (*api.User, error) {
 	var user *api.User = &api.User{}
 	result, err := dbh.Connection.Query(`SELECT * FROM users WHERE telegram_id = ?;`, id)
 	if err != nil {
-		panic(err)
+		return user, err
 	}
 	defer result.Close()
 	if result.Next() {
@@ -129,15 +189,65 @@ func (dbh *DBHandler) CreateGamesTable() error {
     		   		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
 					game_json TEXT,
 					player_id INTEGER,
-					startmove_time INTEGER);`)
+					startmove_time INTEGER,
+					players TEXT,
+					state INTEGER);`)
 	return err
 }
 
 //InsertGame adds a game to the Games table
-func (dbh *DBHandler) InsertGame(matrixJSON string, player models.Player) error {
+func (dbh *DBHandler) InsertGame(game game.Game) error {
 	//Player structure is described in the models package file player.go
-	_, err := dbh.Connection.Exec(`INSERT INTO users (game_json, player_id, startmove_time) 
-									VALUES (?, ?, datetime('now'));`, matrixJSON, player.PlayerId)
+	_, err := dbh.Connection.Exec(`INSERT INTO game (game_id, game_json, player_id, startmove_time, players, state) 
+									VALUES (?, ?, ?, ?, ?, ?);`,
+		game.GameID, game.GameJSON, game.PlayerID, game.StartMoveTime, game.Players, game.State)
 
 	return err
 }
+
+//GetGameByID returns game.Game object from database with specified id
+func (dbh *DBHandler) GetGameByID(id int) (*game.Game, error) {
+	var game *game.Game = &game.Game{}
+	result, err := dbh.Connection.Query(`SELECT * FROM games WHERE game_id = ?;`, id)
+	if err != nil {
+		panic(err)
+	}
+	defer result.Close()
+	if result.Next() {
+		err := result.Scan(&game.GameID, &game.GameJSON, &game.PlayerID, &game.StartMoveTime, &game.Players, &game.State)
+		return game, err
+	}
+	return game, err
+}
+
+//GetPlayerByID returns models.Player object from database with specified id
+func (dbh *DBHandler) GetPlayerByID(id int) (*models.Player, error) {
+	var player *models.Player = &models.Player{}
+	result, err := dbh.Connection.Query(`SELECT * FROM players WHERE player_id = ?;`, id)
+	if err != nil {
+		return player, err
+	}
+	defer result.Close()
+	if result.Next() {
+		var active int = 1
+		err := result.Scan(&player.PlayerId, &player.ObjectName, &player.Message, &player.X, &player.Y, &player.SmallPic, &player.BigPic, &active, &player.Health,
+			&player.Dexterity, &player.Mastery, &player.Damage, &player.Speed, &player.Visibility, &player.ScoreCandy, &player.ScoreCake, &player.ScoreGold)
+		if active == 0 {
+			player.Active = false
+		} else {
+			player.Active = true
+		}
+		return player, err
+	}
+	return player, err
+}
+
+/*
+//GetGames returns array of all current games
+func (dbh *DBHandler) GetGames() []*game.Game {
+	var games []*game.Game
+	result, err := dbh.Connection.Query(`SELECT * FROM games;`)
+	for result.Next() {
+		games =	result.Scan(&game.GameID, &game.GameJSON, &game.PlayerID, &game.StartMoveTime)
+}
+*/
