@@ -1,19 +1,21 @@
 package drawing
 
 import (
+	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
+	"math/rand"
 	"testing"
 )
 
 func Test_scale(t *testing.T) {
 	tests := []struct {
-		name   string
-		v     float64
-		min1   float64
-		min2   float64
-		max1   float64
-		max2   float64
-		want float64
+		name    string
+		v       float64
+		min1    float64
+		min2    float64
+		max1    float64
+		max2    float64
+		want    float64
 		wantErr bool
 	}{
 		{
@@ -36,12 +38,12 @@ func Test_scale(t *testing.T) {
 
 func Test_drawBackground(t *testing.T) { // just as useless as aqua from konosuba(who watched knows what i mean :) )
 	tests := []struct {
-		name string
+		name       string
 		x, y, w, h int
-	} {
+	}{
 		{
-		"uselessness lvl: aqua", 0, 0, 1023, 1024,
-	}, 
+			"uselessness lvl: aqua", 0, 0, 1023, 1024,
+		},
 	}
 
 	var wantimage bool
@@ -53,7 +55,7 @@ func Test_drawBackground(t *testing.T) { // just as useless as aqua from konosub
 				wantimage = false
 			} else {
 				wantimage = true
-			} 
+			}
 			if wantimage != true {
 				t.Errorf("wanted image got successful true, got successful %t", wantimage)
 			}
@@ -64,9 +66,9 @@ func Test_drawBackground(t *testing.T) { // just as useless as aqua from konosub
 
 func Test_drawGrid(t *testing.T) {
 	tests := []struct {
-		name string
+		name      string
 		dimension int
-	} {
+	}{
 		{
 			"pointless but ok", -3,
 		},
@@ -82,16 +84,16 @@ func Test_drawGrid(t *testing.T) {
 }
 
 func Test_CreatePartViewPhoto(t *testing.T) {
-	locations := []models.Location {
+	locations := []models.Location{
 		&models.CandyFactory{
 			ObjectName: "cf1",
-			SmallPic: "photos/candy_factory.png",
-			X: 3, Y: 4,
+			SmallPic:   "photos/candy_factory.png",
+			X:          3, Y: 4,
 		},
-		&models.Chest {
+		&models.Chest{
 			ObjectName: "ch1",
-			SmallPic: "photos/chest.png",
-			X: 4, Y: 6,
+			SmallPic:   "photos/chest.png",
+			X:          4, Y: 6,
 		},
 	}
 
@@ -102,42 +104,61 @@ func Test_CreatePartViewPhoto(t *testing.T) {
 }
 
 func Test_CreateMapViewPhoto(t *testing.T) {
-	locations := []models.Location {
+	locations := []models.Location{
 		&models.CandyFactory{
-			ObjectName: "cf1",				
-			SmallPic: "photos/candy_factory.png",
-			X: 3, Y: 4,
+			ObjectName: "cf1",
+			SmallPic:   "photos/candy_factory.png",
+			X:          3,
+			Y:          4,
 		},
-		&models.Chest {
+		&models.Chest{
 			ObjectName: "ch1",
-			SmallPic: "photos/chest.png",	
-			X: 4, Y: 6,
-			},
-		}   
+			SmallPic:   "photos/chest.png",
+			X:          4,
+			Y:          6,
+		},
+	}
 
-	err := CreateMapViewPhoto(locations, //here is visited[][]bool 
-	"test_map_view")
+	visited := make([][]bool, defaultDimension)
+	for i := 0; i < defaultDimension; i++ {
+		visited[i] = make([]bool, defaultDimension)
+	}
+
+	for i := 0; i < defaultDimension; i++ {
+		for j := 0; j < defaultDimension; j++ {
+			r := rand.Intn(100)
+			if r > 50 {
+				visited[i][j] = true
+			} else {
+				visited[i][j] = false
+			}
+		}
+	}
+
+	fmt.Println(visited)
+
+	err := CreateMapViewPhoto(locations, visited, "test_map_view")
 	if err != nil {
-	t.Errorf("Expected nil error, got %v", err)
+		t.Errorf("Expected nil error, got %v", err)
 	}
 }
 
 func Test_CreateFullViewPhoto(t *testing.T) {
-	locations := []models.Location {
+	locations := []models.Location{
 		&models.CandyFactory{
-			ObjectName: "cf1",				
-			SmallPic: "photos/candy_factory.png",
-			X: 3, Y: 4,
+			ObjectName: "cf1",
+			SmallPic:   "photos/candy_factory.png",
+			X:          3, Y: 4,
 		},
-		&models.Chest {
+		&models.Chest{
 			ObjectName: "ch1",
-			SmallPic: "photos/chest.png",	
-			X: 4, Y: 6,
-			},
-		}		
-	
+			SmallPic:   "photos/chest.png",
+			X:          4, Y: 6,
+		},
+	}
+
 	err := CreateFullViewPhoto(locations, "test_full_view")
 	if err != nil {
-	t.Errorf("Expected nil error, got %v", err)
+		t.Errorf("Expected nil error, got %v", err)
 	}
 }
