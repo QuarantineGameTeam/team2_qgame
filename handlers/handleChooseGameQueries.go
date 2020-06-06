@@ -46,6 +46,8 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 		log.Println(err)
 	}
 
+	log.Println("Added new game")
+
 	err = client.AnswerCallBackQuery(query, "OK.", false)
 	if err != nil {
 		log.Println(err)
@@ -58,13 +60,22 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 	if err != nil {
 		log.Println(err)
 	}
-
-	photoLocation := "../drawers/temp/testpic"
+	
+	photoLocation := "temp/testpic.png"
 	err = drawers.CreateFullViewPhoto(currGame.Locations, "testpic")
 	if err != nil {
 		log.Println(err)
 	}
 	err = client.SendPhoto(query.FromUser.ID, photoLocation)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = client.SendMessage(api.Message {
+		ChatID: query.FromUser.ID,
+		Text: "Your turn.",
+		InlineMarkup: mainGameMarkup,
+	})
 	if err != nil {
 		log.Println(err)
 	}

@@ -14,7 +14,10 @@ func NewDBHandler() (*DBHandler, error) {
 		DBPath:     Path,
 	}
 	err := dbh.Connect()
-	dbh.CreateTables()
+	if err != nil {
+		return dbh, err
+	}
 
+	err = dbh.CreateTables()
 	return dbh, err
 }

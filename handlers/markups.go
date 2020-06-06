@@ -50,4 +50,46 @@ var (
 			},
 		},
 	}
+
+	mainGameMarkup = api.InlineKeyboardMarkup{
+		Buttons: [][]api.InlineKeyboardButton{
+			// Row 1
+			{
+				{
+					Text:     "Map",
+					Callback: "map",
+				},
+				{
+					Text:     "⬆️",
+					Callback: "up",
+				},
+				{
+					Text:     "Interact",
+					Callback: "interact",
+				},
+			},
+			// Row 2
+			{
+				{
+					Text:     "⬅️",
+					Callback: "left",
+				},
+				{
+					Text:     "⬇️",
+					Callback: "down",
+				},
+				{
+					Text:     "➡️",
+					Callback: "right",
+				},
+			},
+			// Row 3
+			{
+				{
+					Text:     "Castle",
+					Callback: "castle",
+				},
+			},
+		},
+	}
 )

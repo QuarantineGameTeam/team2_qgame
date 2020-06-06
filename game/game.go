@@ -33,18 +33,18 @@ func generateLocations() []models.Location {
 	return []models.Location{
 		&models.CandyFactory{
 			ObjectName: "cf1",
-			SmallPic:   "../drawers/photos/candy_factory.png",
+			SmallPic:   "photos/candy_factory.png",
 			X:          3, Y: 4,
 		},
 		&models.Chest{
 			ObjectName: "ch1",
-			SmallPic:   "../drawers/photos/chest.png",
+			SmallPic:   "photos/chest.png",
 			X:          4, Y: 6,
 		},
 		&models.Player{
 			ObjectName: "p1",
 			X:          5, Y: 5,
-			SmallPic: "../drawers/photos/enemy.png",
+			SmallPic: "photos/enemy.png",
 		},
 	}
 }

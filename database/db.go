@@ -214,7 +214,7 @@ func (dbh *DBHandler) CreateGamesTable() error {
 //InsertGame adds a game to the Games table
 func (dbh *DBHandler) InsertGame(matrixJSON string, player models.Player) error {
 	//Player structure is described in the models package file player.go
-	_, err := dbh.Connection.Exec(`INSERT INTO users (game_json, player_id, startmove_time) 
+	_, err := dbh.Connection.Exec(`INSERT INTO games (game_json, player_id, startmove_time) 
 									VALUES (?, ?, ?);`, matrixJSON, player.PlayerId, time.Now().Unix())
 
 	return err

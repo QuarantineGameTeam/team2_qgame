@@ -151,5 +151,6 @@ func CreateFullViewPhoto(locations []models.Location, saveTo string) error {
 
 		context.DrawImage(crop, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
 	}
+
 	return context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
 }
