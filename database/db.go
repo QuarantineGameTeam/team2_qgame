@@ -3,8 +3,10 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"log"
+
+	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/models"
 
 	//import sqlite driver
 	_ "github.com/mattn/go-sqlite3"
@@ -28,6 +30,7 @@ func (dbh *DBHandler) Connect() error {
 //CreateTables is a shortcut to create all necessary tables
 func (dbh *DBHandler) CreateTables() {
 	dbh.CreateUsersTable()
+	dbh.CreateGamesTable()
 }
 
 //CreateUsersTable creates a table of Users with two fields, if one does not already exist
@@ -57,7 +60,7 @@ func (dbh *DBHandler) Update(table, field string, value interface{}, whereField 
 }
 
 // GetField returns value of field in given table in respect to to some parameter
-func (dbh *DBHandler) GetField(table, field, whereField string, whereVal interface {}) interface{} {
+func (dbh *DBHandler) GetField(table, field, whereField string, whereVal interface{}) interface{} {
 	result, err := dbh.Connection.Query(fmt.Sprintf(`SELECT %s FROM %s WHERE %s = ?;`, field, table, whereField), whereVal)
 
 	if err != nil {
@@ -76,7 +79,6 @@ func (dbh *DBHandler) GetField(table, field, whereField string, whereVal interfa
 
 	return state
 }
-
 
 //NameExists returns true if a user with the same name is already registered
 func (dbh *DBHandler) NameExists(name string) (bool, error) {
@@ -117,4 +119,25 @@ func (dbh *DBHandler) GetUserByID(id int) (*api.User, error) {
 		return user, err
 	}
 	return user, err
+}
+
+//CreateGamesTable creates a table for games info, active player and
+//his time mark for permission to start move
+func (dbh *DBHandler) CreateGamesTable() error {
+	_, err := dbh.Connection.Exec(
+		`CREATE TABLE IF NOT EXISTS games (
+    		   		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
+					game_json TEXT,
+					player_id INTEGER,
+					startmove_time INTEGER);`)
+	return err
+}
+
+//InsertGame adds a game to the Games table
+func (dbh *DBHandler) InsertGame(matrixJSON string, player models.Player) error {
+	//Player structure is described in the models package file player.go
+	_, err := dbh.Connection.Exec(`INSERT INTO users (game_json, player_id, startmove_time) 
+									VALUES (?, ?, datetime('now'));`, matrixJSON, player.PlayerId)
+
+	return err
 }
