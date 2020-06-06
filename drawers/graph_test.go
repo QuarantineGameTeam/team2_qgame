@@ -102,70 +102,42 @@ func Test_CreatePartViewPhoto(t *testing.T) {
 }
 
 func Test_CreateMapViewPhoto(t *testing.T) {
-	tests := []struct {
-		name string
-		locX int 
-		locY int
-		visited bool
-		dimension int
-	} {
-		{
-			"ok but i prefer sth more useful", 4, -5, true, 9, 
+	locations := []models.Location {
+		&models.CandyFactory{
+			ObjectName: "cf1",				
+			SmallPic: "photos/candy_factory.png",
+			X: 3, Y: 4,
 		},
-	}
+		&models.Chest {
+			ObjectName: "ch1",
+			SmallPic: "photos/chest.png",	
+			X: 4, Y: 6,
+			},
+		}   
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			var wantval, validnum bool
-			if test.dimension < 0 {
-				validnum = false
-			} else if test.locX < 0 || test.locX > test.dimension {
-				validnum = false
-			} else if test.locY < 0 || test.locY > test.dimension {
-				validnum = false
-			} else if test.visited != true {
-				wantval = false
-				validnum = true
-			} else {
-				wantval = true
-				validnum = true
-			}
-			if validnum != true {
-				t.Errorf("wanted locX and/or locY value is negative or out of bounds, have valid number %t", validnum)
-			}
-			if wantval != true {
-				t.Errorf("wanted value visited true, have wanted value %t", wantval)
-			}
-		})
+	err := CreateMapViewPhoto(locations, //here is visited[][]bool 
+	"test_map_view")
+	if err != nil {
+	t.Errorf("Expected nil error, got %v", err)
 	}
 }
 
 func Test_CreateFullViewPhoto(t *testing.T) {
-	tests := []struct {
-		name string
-		locX, locY int
-		dimension int
-	} {
-		{
-			"just useless", 3, 4, 9,
+	locations := []models.Location {
+		&models.CandyFactory{
+			ObjectName: "cf1",				
+			SmallPic: "photos/candy_factory.png",
+			X: 3, Y: 4,
 		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			var validnum bool
-			if test.dimension < 0 {
-				validnum = false
-			} else if test.locX < 0 || test.locX > test.dimension {
-				validnum = false
-			} else if test.locY < 0 || test.locY > test.dimension {
-				validnum = false
-			} else {
-				validnum = true
-			}
-			if validnum != true {
-				t.Errorf("wanted values positive, have number vaildity %t due to one of values being negative or locX/Y being out of bounds", validnum)
-			}
-		})
+		&models.Chest {
+			ObjectName: "ch1",
+			SmallPic: "photos/chest.png",	
+			X: 4, Y: 6,
+			},
+		}		
+	
+	err := CreateFullViewPhoto(locations, "test_full_view")
+	if err != nil {
+	t.Errorf("Expected nil error, got %v", err)
 	}
 }

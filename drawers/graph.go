@@ -70,7 +70,7 @@ func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCen
 			log.Fatal(err)
 		}	//finally found a bit confusing but ok way to convert string to image.Image.
 		fmt.Println(name)	//tbh idk where to use string name. Just useless use for that type.
-		crop := resize.Resize(uint(s)/3, uint(s)/3, img, resize.Lanczos3)
+		crop := resize.Resize(uint(s)/uint(horizon), uint(s)/uint(horizon), img, resize.Lanczos3)
 		if locX >= (drawingCenterX - drawingHorizon) && locX <= (drawingCenterX + drawingHorizon) {
 			if locY >= (drawingCenterY - drawingHorizon) && locY <= (drawingCenterY + drawingHorizon) {
 				if locX > drawingCenterX && locY > drawingCenterY {
@@ -101,7 +101,7 @@ func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCen
 }
 
 //CreateMapViewPhoto draws a full map but only areas that have been visited will be displayed.
-func CreateMapViewPhoto(locations []models.Location, visited[][]bool, saveTo string) {
+func CreateMapViewPhoto(locations []models.Location, visited[][]bool, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
 	drawBackground(context, color.White)
 	drawGrid(context, defaultDimension)
@@ -125,11 +125,11 @@ func CreateMapViewPhoto(locations []models.Location, visited[][]bool, saveTo str
 			context.DrawImage(crop, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
 		}
 	}
-	context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
+	return context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
 }
 
 //CreateFullViewPhoto draws a full map with all the locations no matter if they are not visible. Only for admins.
-func CreateFullViewPhoto(locations []models.Location, saveTo string) {
+func CreateFullViewPhoto(locations []models.Location, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
 	drawBackground(context, color.White)
 	drawGrid(context, defaultDimension)
@@ -151,5 +151,5 @@ func CreateFullViewPhoto(locations []models.Location, saveTo string) {
 
 		context.DrawImage(crop, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
 	}
-	context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
+	return context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
 }
