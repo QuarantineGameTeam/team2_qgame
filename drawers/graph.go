@@ -1,4 +1,4 @@
-package drawing
+package drawers
 
 import (
 	"fmt"

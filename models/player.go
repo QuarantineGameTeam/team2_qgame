@@ -27,6 +27,10 @@ func (p *Player) GetLocation() (int, int) {
 	return p.X, p.Y
 }
 
+func (p *Player) Interact(*Player){
+	
+}
+
 //InteractWith makes player interact with game object on the location
 func (p *Player) InteractWith(location *Location) {
 	(*location).Interact(p)

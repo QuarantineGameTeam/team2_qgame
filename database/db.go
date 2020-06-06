@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
@@ -214,7 +215,7 @@ func (dbh *DBHandler) CreateGamesTable() error {
 func (dbh *DBHandler) InsertGame(matrixJSON string, player models.Player) error {
 	//Player structure is described in the models package file player.go
 	_, err := dbh.Connection.Exec(`INSERT INTO users (game_json, player_id, startmove_time) 
-									VALUES (?, ?, datetime('now'));`, matrixJSON, player.PlayerId)
+									VALUES (?, ?, ?);`, matrixJSON, player.PlayerId, time.Now().Unix())
 
 	return err
 }
