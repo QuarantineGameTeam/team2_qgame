@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/config"
+	"github.com/QuarantineGameTeam/team2_qgame/game"
 	"github.com/QuarantineGameTeam/team2_qgame/handlers"
 	"log"
 	"time"
@@ -39,6 +40,8 @@ func main() {
 				go handlers.HandleUpdate(client, update)
 			}
 		}
+
+		game.GameUpdate()
 
 		time.Sleep(time.Millisecond * 100)
 	}
