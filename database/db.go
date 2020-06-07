@@ -242,12 +242,25 @@ func (dbh *DBHandler) GetPlayerByID(id int) (*models.Player, error) {
 	return player, err
 }
 
-/*
+
 //GetGames returns array of all current games
 func (dbh *DBHandler) GetGames() []*game.Game {
 	var games []*game.Game
 	result, err := dbh.Connection.Query(`SELECT * FROM games;`)
-	for result.Next() {
-		games =	result.Scan(&game.GameID, &game.GameJSON, &game.PlayerID, &game.StartMoveTime)
+	if err != nil {
+		log.Println()
+	}
+	
+	if result != nil {
+		for result.Next() {
+			readingGame := new(game.Game)
+			err = result.Scan(&readingGame.GameID, &readingGame.GameJSON, &readingGame.PlayerID, 
+				&readingGame.StartMoveTime, &readingGame.Players, &readingGame.State)
+			if err != nil {
+				log.Println(err)
+			}
+		}
+	}
+
+	return games
 }
-*/
