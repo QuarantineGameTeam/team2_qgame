@@ -44,9 +44,7 @@ func (c *Client) SendMessage(m Message) (UpdateMessage, error) {
 	if resp.StatusCode == 200 {
 		var response struct{
 			OK bool `json:"ok"`
-			Result struct {
-				UMessage UpdateMessage
-			}
+			Result UpdateMessage
 		}
 		err = json.Unmarshal(body, &response)
 		if err != nil {
@@ -56,7 +54,7 @@ func (c *Client) SendMessage(m Message) (UpdateMessage, error) {
 			return UpdateMessage{}, err
 		}
 
-		return response.Result.UMessage, nil
+		return response.Result, nil
 	}
 
 	return UpdateMessage{}, errors.New(string(body))
