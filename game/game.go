@@ -2,27 +2,52 @@ package game
 
 import (
 	"encoding/json"
+	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 	"log"
 )
 
+const (
+	StateMatchMaking = iota
+	StateRunning     = iota
+	StateEnded       = iota
+)
+
+const PlayersCount = 2
+
 type Game struct {
-	GameID        int
-	Locations     []models.Location
+	GameID int
+
+	Locations []models.Location
+	GameJSON  string
+
 	PlayerID      int
 	StartMoveTime int
-	GameJSON      string
-	Players       string //for identifying a free place to add new gamer in current game
-	State         int    //for game status
+
+	Players     []models.Player
+	PlayersJSON string //for identifying a free place to add new gamer in current game
+
+	State int //for game status
 }
 
-func NewGame() (*Game, error) {
+func NewGame(starter *api.User) (*Game, error) {
 	var err error
 
 	game := new(Game)
-	game.Locations = generateLocations()
+	game.Locations = generateLocations(starter)
+
 	jsonBytes, err := json.Marshal(game.Locations)
 	game.GameJSON = string(jsonBytes)
+	game.State = StateMatchMaking
+	game.Players = []models.Player{
+		*models.NewPlayer(*starter, 0, 0),
+	}
+	bytePlayers, err := json.Marshal(game.Players)
+	if err != nil {
+		log.Println(err)
+	}
+	game.PlayersJSON = string(bytePlayers)
+
 	if err != nil {
 		log.Println("Error creating the game.\n", err)
 	}
@@ -30,7 +55,10 @@ func NewGame() (*Game, error) {
 	return game, err
 }
 
-func generateLocations() []models.Location {
+func generateLocations(starter *api.User) []models.Location {
+	// needs to be relative with castle
+	starterPlayer := models.NewPlayer(*starter, 0, 0)
+
 	// has to perform generating. Right now its giving out some of actual nothing ...
 	return []models.Location{
 		&models.CandyFactory{
@@ -43,10 +71,6 @@ func generateLocations() []models.Location {
 			SmallPic:   "photos/chest.png",
 			X:          4, Y: 6,
 		},
-		&models.Player{
-			ObjectName: "p1",
-			X:          5, Y: 5,
-			SmallPic: "photos/enemy.png",
-		},
+		starterPlayer,
 	}
 }

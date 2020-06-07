@@ -30,13 +30,13 @@ func handleStartMessage(client *api.Client, message api.UpdateMessage) {
 	}
 
 	if contains {
-		err = client.SendMessage(api.Message{
+		_, err = client.SendMessage(api.Message{
 			ChatID:       message.FromUser.ID,
 			Text:         fmt.Sprintf("Hello, %s! Welcome back!", message.FromUser.FirstName),
 			InlineMarkup: startMarkup,
 		})
 	} else {
-		err = client.SendMessage(api.Message{
+		_, err = client.SendMessage(api.Message{
 			ChatID:       message.FromUser.ID,
 			Text:         fmt.Sprintf("Hello, %s! Welcome to CandyWarGO!", message.FromUser.FirstName),
 			InlineMarkup: startMarkup,
@@ -81,7 +81,7 @@ func handleChangeNickNameMessage(client *api.Client, message api.UpdateMessage) 
 		msg = "Sorry. Some error happened."
 	}
 
-	err = client.SendMessage(
+	_, err = client.SendMessage(
 		api.Message{
 			ChatID: message.FromUser.ID,
 			Text:   msg,

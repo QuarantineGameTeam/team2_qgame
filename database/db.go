@@ -2,9 +2,9 @@ package database
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/game"
@@ -182,21 +182,6 @@ func (dbh *DBHandler) GetUserByID(id int) (*api.User, error) {
 	return user, err
 }
 
-//GetGameByID returns game.Game object from database with specified id
-func (dbh *DBHandler) GetGameByID(id int) (*game.Game, error) {
-	var game *game.Game = &game.Game{}
-	result, err := dbh.Connection.Query(`SELECT * FROM games WHERE game_id = ?;`, id)
-	if err != nil {
-		panic(err)
-	}
-	defer result.Close()
-	if result.Next() {
-		err := result.Scan(&game.GameID, &game.GameJSON, &game.PlayerID, &game.StartMoveTime, &game.Players, &game.State)
-		return game, err
-	}
-	return game, err
-}
-
 //GetPlayerByID returns models.Player object from database with specified id
 func (dbh *DBHandler) GetPlayerByID(id int) (*models.Player, error) {
 	var player *models.Player = &models.Player{}
@@ -227,23 +212,49 @@ func (dbh *DBHandler) CreateGamesTable() error {
     		   		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
 					game_json TEXT,
 					player_id INTEGER,
-					startmove_time INTEGER);`)
+					startmove_time INTEGER,
+					players_json TEXT,
+					state INTEGER);`)
 	return err
 }
 
 //InsertGame adds a game to the Games table
-func (dbh *DBHandler) InsertGame(matrixJSON string, player models.Player) error {
+func (dbh *DBHandler) InsertGame(game game.Game) error {
 	//Player structure is described in the models package file player.go
-	_, err := dbh.Connection.Exec(`INSERT INTO games (game_json, player_id, startmove_time) 
-									VALUES (?, ?, ?);`, matrixJSON, player.PlayerId, time.Now().Unix())
+	_, err := dbh.Connection.Exec(`INSERT INTO games (game_json, player_id, startmove_time, players_json, state) 
+									VALUES (?, ?, ?, ?, ?);`,
+		game.GameJSON, game.PlayerID, game.StartMoveTime, game.PlayersJSON, game.State)
 
 	return err
 }
 
+//GetGameByID returns game.Game object from database with specified id
+func (dbh *DBHandler) GetGameByID(id int) (*game.Game, error) {
+	gm := new(game.Game)
+	result, err := dbh.Connection.Query(`SELECT * FROM games WHERE game_id = ?;`, id)
+	if err != nil {
+		panic(err)
+	}
+	defer result.Close()
+	if result.Next() {
+		err := result.Scan(&gm.GameID, &gm.GameJSON, &gm.PlayerID, &gm.StartMoveTime, &gm.PlayersJSON, &gm.State)
+		err = json.Unmarshal([]byte(gm.GameJSON), &gm.Locations)
+		if err != nil {
+			log.Println(err)
+		}
+
+		err = json.Unmarshal([]byte(gm.PlayersJSON), &gm.Players)
+		if err != nil {
+			log.Println(err)
+		}
+		return gm, err
+	}
+	return gm, err
+}
 
 //GetGames returns array of all current games
 func (dbh *DBHandler) GetGames() []*game.Game {
-	games := make([]*game.Game, 10)
+	var games []*game.Game
 	result, err := dbh.Connection.Query(`SELECT * FROM games;`)
 	if err != nil {
 		log.Println()
@@ -253,10 +264,22 @@ func (dbh *DBHandler) GetGames() []*game.Game {
 		for result.Next() {
 			readingGame := new(game.Game)
 			err = result.Scan(&readingGame.GameID, &readingGame.GameJSON, &readingGame.PlayerID, 
-				&readingGame.StartMoveTime, &readingGame.Players, &readingGame.State)
+				&readingGame.StartMoveTime, &readingGame.PlayersJSON, &readingGame.State)
 			if err != nil {
 				log.Println(err)
 			}
+
+			fmt.Println(readingGame.GameJSON)
+			err = json.Unmarshal([]byte(readingGame.GameJSON), &readingGame.Locations)
+			if err != nil {
+				log.Println(err)
+			}
+
+			err = json.Unmarshal([]byte(readingGame.PlayersJSON), &readingGame.Players)
+			if err != nil {
+				log.Println(err)
+			}
+			
 			games = append(games, readingGame)
 		}
 	}

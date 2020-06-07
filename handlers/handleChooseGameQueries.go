@@ -6,7 +6,6 @@ import (
 	"github.com/QuarantineGameTeam/team2_qgame/database"
 	"github.com/QuarantineGameTeam/team2_qgame/drawers"
 	"github.com/QuarantineGameTeam/team2_qgame/game"
-	"github.com/QuarantineGameTeam/team2_qgame/models"
 	"log"
 )
 
@@ -31,7 +30,8 @@ func handleChooseGameQueries(client *api.Client, query api.CallBackQuery) {
 
 func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 	var err error
-	currGame, err := game.NewGame()
+
+	err = client.AnswerCallBackQuery(query, fmt.Sprintf("You entered game in clan of %s!", data), true)
 	if err != nil {
 		log.Println(err)
 	}
@@ -41,42 +41,36 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 		log.Println(err)
 	}
 
-	err = dbh.InsertGame(currGame.GameJSON, *models.NewPlayer(query.FromUser, 5, 5))
-	if err != nil {
-		log.Println(err)
+	// Go for determining player's game
+	gm, err := dbh.GetGameByID(7)
+	if err != nil || gm == new(game.Game) {
+		log.Println("Error getting game with index 7.\n",err)
 	}
 
-	log.Println("Added new game")
+	gm.LocatePlayers()
 
-	err = client.AnswerCallBackQuery(query, "OK.", false)
-	if err != nil {
-		log.Println(err)
-	}
-
-	err = client.SendMessage(api.Message{
-		ChatID: query.FromUser.ID,
-		Text: fmt.Sprintf("You entered game in clan of %s!", data),
-	})
-	if err != nil {
-		log.Println(err)
-	}
-	
 	photoLocation := "temp/testpic.png"
-	err = drawers.CreateFullViewPhoto(currGame.Locations, "testpic")
-	if err != nil {
-		log.Println(err)
-	}
-	err = client.SendPhoto(query.FromUser.ID, photoLocation)
+	err = drawers.CreateFullViewPhoto(gm.Locations, "testpic")
 	if err != nil {
 		log.Println(err)
 	}
 
-	err = client.SendMessage(api.Message {
-		ChatID: query.FromUser.ID,
-		Text: "Your turn.",
-		InlineMarkup: mainGameMarkup,
-	})
-	if err != nil {
-		log.Println(err)
+	fmt.Println("Game is: ", *gm)
+
+	for _, p := range gm.Players {
+		err = client.SendPhoto(p.PlayerId, photoLocation)
+		if err != nil {
+			log.Println(err)
+		}
 	}
+
+	// Sending move buttons one by one for players
+	//_, err = client.SendMessage(api.Message {
+	//	ChatID: query.FromUser.ID,
+	//	Text: "Your turn.",
+	//	InlineMarkup: mainGameMarkup,
+	//})
+	//if err != nil {
+	//	log.Println(err)
+	//}
 }
