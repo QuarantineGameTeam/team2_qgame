@@ -33,13 +33,13 @@ func handleStartMessage(client *api.Client, message api.UpdateMessage) {
 		err = client.SendMessage(api.Message{
 			ChatID:       message.FromUser.ID,
 			Text:         fmt.Sprintf("Hello, %s! Welcome back!", message.FromUser.FirstName),
-			InlineMarkup: startMarkup(message),
+			InlineMarkup: startMarkup,
 		})
 	} else {
 		err = client.SendMessage(api.Message{
 			ChatID:       message.FromUser.ID,
 			Text:         fmt.Sprintf("Hello, %s! Welcome to CandyWarGO!", message.FromUser.FirstName),
-			InlineMarkup: startMarkup(message),
+			InlineMarkup: startMarkup,
 		})
 
 		// adding user to database if it is not there
