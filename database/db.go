@@ -243,7 +243,7 @@ func (dbh *DBHandler) InsertGame(matrixJSON string, player models.Player) error 
 
 //GetGames returns array of all current games
 func (dbh *DBHandler) GetGames() []*game.Game {
-	var games []*game.Game
+	games := make([]*game.Game, 10)
 	result, err := dbh.Connection.Query(`SELECT * FROM games;`)
 	if err != nil {
 		log.Println()
@@ -257,6 +257,7 @@ func (dbh *DBHandler) GetGames() []*game.Game {
 			if err != nil {
 				log.Println(err)
 			}
+			games = append(games, readingGame)
 		}
 	}
 
