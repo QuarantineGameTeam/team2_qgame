@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/game"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 
 	//import sqlite driver
@@ -34,6 +35,10 @@ func (dbh *DBHandler) CreateTables() error {
 		return err
 	}
 	err = dbh.CreatePlayersTable()
+	if err != nil {
+		return err
+	}
+	err = dbh.CreateGamesTable()
 	return err
 }
 
@@ -176,6 +181,45 @@ func (dbh *DBHandler) GetUserByID(id int) (*api.User, error) {
 	return user, err
 }
 
+//CreateGamesTable creates a table for games info, active player and
+//his time mark for permission to start move
+func (dbh *DBHandler) CreateGamesTable() error {
+	_, err := dbh.Connection.Exec(
+		`CREATE TABLE IF NOT EXISTS games (
+    		   		game_id INTEGER PRIMARY KEY AUTOINCREMENT,
+					game_json TEXT,
+					player_id INTEGER,
+					startmove_time INTEGER,
+					players TEXT,
+					state INTEGER);`)
+	return err
+}
+
+//InsertGame adds a game to the Games table
+func (dbh *DBHandler) InsertGame(game game.Game) error {
+	//Player structure is described in the models package file player.go
+	_, err := dbh.Connection.Exec(`INSERT INTO game (game_id, game_json, player_id, startmove_time, players, state) 
+									VALUES (?, ?, ?, ?, ?, ?);`,
+		game.GameID, game.GameJSON, game.PlayerID, game.StartMoveTime, game.Players, game.State)
+
+	return err
+}
+
+//GetGameByID returns game.Game object from database with specified id
+func (dbh *DBHandler) GetGameByID(id int) (*game.Game, error) {
+	var game *game.Game = &game.Game{}
+	result, err := dbh.Connection.Query(`SELECT * FROM games WHERE game_id = ?;`, id)
+	if err != nil {
+		panic(err)
+	}
+	defer result.Close()
+	if result.Next() {
+		err := result.Scan(&game.GameID, &game.GameJSON, &game.PlayerID, &game.StartMoveTime, &game.Players, &game.State)
+		return game, err
+	}
+	return game, err
+}
+
 //GetPlayerByID returns models.Player object from database with specified id
 func (dbh *DBHandler) GetPlayerByID(id int) (*models.Player, error) {
 	var player *models.Player = &models.Player{}
@@ -197,3 +241,13 @@ func (dbh *DBHandler) GetPlayerByID(id int) (*models.Player, error) {
 	}
 	return player, err
 }
+
+/*
+//GetGames returns array of all current games
+func (dbh *DBHandler) GetGames() []*game.Game {
+	var games []*game.Game
+	result, err := dbh.Connection.Query(`SELECT * FROM games;`)
+	for result.Next() {
+		games =	result.Scan(&game.GameID, &game.GameJSON, &game.PlayerID, &game.StartMoveTime)
+}
+*/
