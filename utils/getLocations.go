@@ -9,8 +9,8 @@ import (
 )
 
 //GetLocations returns array of pointers to models.Location from json string
-func GetLocations(GotJSON string) ([]*models.Location, error) {
-	result := []*models.Location{}
+func GetLocations(GotJSON string) ([]models.Location, error) {
+	result := []models.Location{}
 	var got []map[string]interface{}
 	err := json.Unmarshal([]byte(GotJSON), &got)
 	if err != nil {
@@ -47,11 +47,11 @@ func GetLocations(GotJSON string) ([]*models.Location, error) {
 			location = &models.SweetHome{}
 			break
 		}
-		err = mapstructure.Decode(got[i], &location)
+		err = mapstructure.Decode(got[i], location)
 		if err != nil {
 			return result, err
 		}
-		result = append(result, &location)
+		result = append(result, location)
 	}
 	return result, err
 }
