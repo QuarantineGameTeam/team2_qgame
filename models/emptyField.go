@@ -1,5 +1,16 @@
 package models
 
+const (
+	//Default parameters
+	EmptyName          = "Empty Field"
+	EmptyReusable      = true
+	EmptyOccupiedField = false
+
+	//Paths to pictures
+	SmallEmptyPicPath = ""
+	BigEmptyPicPath   = ""
+)
+
 //EmptyField is a location, which does not contain any game objects
 type EmptyField struct {
 	X, Y          int
@@ -8,6 +19,19 @@ type EmptyField struct {
 	OccupiedField bool   `json:"occupied_field"` //If true -player can occupie this field
 	SmallPic      string `json:"small_pic"`      //path to pic
 	BigPic        string `json:"big_pic"`
+}
+
+//NewEmptyField returns pointer to the default block
+func NewEmptyField(x, y int) *EmptyField {
+	return &EmptyField{
+		ObjectName:    EmptyName,
+		Repeatable:    EmptyReusable,
+		OccupiedField: EmptyOccupiedField,
+		X:             x,
+		Y:             y,
+		SmallPic:      SmallEmptyPicPath,
+		BigPic:        BigEmptyPicPath,
+	}
 }
 
 //GetLocation returns x and y
