@@ -56,8 +56,6 @@ func handleControlsQueries(client *api.Client, query api.CallBackQuery) {
 		log.Println(err)
 	}
 
-	fmt.Println("Game is: ", *game)
-
 	for _, p := range game.Players {
 		err = client.SendPhoto(p.PlayerId, photoLocation)
 		if err != nil {

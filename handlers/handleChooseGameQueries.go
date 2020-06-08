@@ -18,7 +18,7 @@ func handleChooseGameQueries(client *api.Client, query api.CallBackQuery) {
 
 	pass := true
 	for _, clan := range clans {
-		if startsWith(data, clan) {
+		if data == clan {
 			pass = false
 		}
 	}
@@ -54,8 +54,6 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 	if err != nil {
 		log.Println(err)
 	}
-
-	fmt.Println("Game is: ", *gm)
 
 	for _, p := range gm.Players {
 		err = client.SendPhoto(p.PlayerId, photoLocation)

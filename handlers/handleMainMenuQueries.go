@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/config"
 	"github.com/QuarantineGameTeam/team2_qgame/database"
@@ -41,7 +40,6 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 	}
 
 	games := dbh.GetGames()
-	fmt.Println(games)
 
 	if len(games) == 0 {
 		// Creating new game if there are no games at all

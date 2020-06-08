@@ -65,11 +65,10 @@ func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCen
 		}
 		defer f.Close()
 
-		img, name, err := image.Decode(f)
+		img, _, err := image.Decode(f)
 		if err != nil {
 			log.Fatal(err)
 		}	//finally found a bit confusing but ok way to convert string to image.Image.
-		fmt.Println(name)	//tbh idk where to use string name. Just useless use for that type.
 		crop := resize.Resize(uint(s)/uint(horizon), uint(s)/uint(horizon), img, resize.Lanczos3)
 		if locX >= (drawingCenterX - drawingHorizon) && locX <= (drawingCenterX + drawingHorizon) {
 			if locY >= (drawingCenterY - drawingHorizon) && locY <= (drawingCenterY + drawingHorizon) {
@@ -113,11 +112,10 @@ func CreateMapViewPhoto(locations []models.Location, visited[][]bool, saveTo str
 		}
 		defer f.Close()
 
-		img, name, err := image.Decode(f)
+		img, _, err := image.Decode(f)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(name)
 
 		crop := resize.Resize(uint(s)/9, uint(s)/9, img, resize.Lanczos3)
 
@@ -141,11 +139,10 @@ func CreateFullViewPhoto(locations []models.Location, saveTo string) error {
 		}
 		defer f.Close()
 
-		img, name, err := image.Decode(f)
+		img, _, err := image.Decode(f)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(name)
 
 		crop := resize.Resize(uint(s)/9, uint(s)/9, img, resize.Lanczos3)
 

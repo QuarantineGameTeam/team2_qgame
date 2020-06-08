@@ -135,8 +135,6 @@ func Test_CreateMapViewPhoto(t *testing.T) {
 		}
 	}
 
-	fmt.Println(visited)
-
 	err := CreateMapViewPhoto(locations, visited, "test_map_view")
 	if err != nil {
 		t.Errorf("Expected nil error, got %v", err)
