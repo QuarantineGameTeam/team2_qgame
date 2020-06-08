@@ -2,6 +2,7 @@ package drawing
 
 import (
 	"fmt"
+	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 	"math/rand"
 	"testing"
@@ -97,7 +98,16 @@ func Test_CreatePartViewPhoto(t *testing.T) {
 		},
 	}
 
-	err := CreatePartViewPhoto(locations, 4, 4, 1, "test_part_view")
+	p1 := *models.NewPlayer(api.User{}, 1, 2)
+	p1.SmallPic = "photos/enemy.png"
+	p2 := *models.NewPlayer(api.User{}, 3, 7)
+	p2.SmallPic = "photos/enemy.png"
+
+	players := []models.Player{
+		p1, p2,
+	}
+
+	err := CreatePartViewPhoto(locations, players,4, 4, 1, "test_part_view")
 	if err != nil {
 		t.Errorf("Expected nil error, got %v", err)
 	}
@@ -119,6 +129,16 @@ func Test_CreateMapViewPhoto(t *testing.T) {
 		},
 	}
 
+	p1 := *models.NewPlayer(api.User{}, 1, 2)
+	p1.SmallPic = "photos/enemy.png"
+	p2 := *models.NewPlayer(api.User{}, 3, 7)
+	p2.SmallPic = "photos/enemy.png"
+
+	players := []models.Player{
+		p1, p2,
+	}
+
+
 	visited := make([][]bool, defaultDimension)
 	for i := 0; i < defaultDimension; i++ {
 		visited[i] = make([]bool, defaultDimension)
@@ -137,7 +157,7 @@ func Test_CreateMapViewPhoto(t *testing.T) {
 
 	fmt.Println(visited)
 
-	err := CreateMapViewPhoto(locations, visited, "test_map_view")
+	err := CreateMapViewPhoto(locations, players, visited, "test_map_view")
 	if err != nil {
 		t.Errorf("Expected nil error, got %v", err)
 	}
@@ -157,7 +177,16 @@ func Test_CreateFullViewPhoto(t *testing.T) {
 		},
 	}
 
-	err := CreateFullViewPhoto(locations, "test_full_view")
+	p1 := *models.NewPlayer(api.User{}, 1, 2)
+	p1.SmallPic = "photos/enemy.png"
+	p2 := *models.NewPlayer(api.User{}, 3, 7)
+	p2.SmallPic = "photos/enemy.png"
+
+	players := []models.Player{
+		p1, p2,
+	}
+
+	err := CreateFullViewPhoto(locations, players, "test_full_view")
 	if err != nil {
 		t.Errorf("Expected nil error, got %v", err)
 	}
