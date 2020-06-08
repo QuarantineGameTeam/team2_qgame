@@ -73,7 +73,7 @@ func (p *Player) GetLocation() (int, int) {
 }
 
 func (p *Player) Interact(*Player){
-	
+	// ...
 }
 
 //InteractWith makes player interact with game object on the location
