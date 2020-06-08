@@ -14,11 +14,11 @@ const (
 //EmptyField is a location, which does not contain any game objects
 type EmptyField struct {
 	X, Y          int
-	ObjectName    string `json:"object_name"`
-	Repeatable    bool   `json:"constantly"`     //player can use repeatedly
-	OccupiedField bool   `json:"occupied_field"` //If true -player can occupie this field
-	SmallPic      string `json:"small_pic"`      //path to pic
-	BigPic        string `json:"big_pic"`
+	ObjectName    string `json:"object_name" mapstructure:"object_name"`
+	Repeatable    bool   `json:"constantly" mapstructure:"constantly"`     //player can use repeatedly
+	OccupiedField bool   `json:"occupied_field" mapstructure:"occupied_field"` //If true -player can occupie this field
+	SmallPic      string `json:"small_pic" mapstructure:"small_pic"` //path to pic
+	BigPic        string `json:"big_pic"  mapstructure:"big_pic"`
 }
 
 //NewEmptyField returns pointer to the default block
