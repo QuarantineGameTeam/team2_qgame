@@ -1,5 +1,29 @@
 package models
 
+const (
+	//Default parameters
+	CakeFactoryName          = "Cake Factory"
+	CakeFactoryReusable      = true
+	CakeFactoryOccupiedField = true
+	CakeFactoryStopsMoving   = true
+	CakeFactoryMessage       = "There is a cake factory"
+	CakeFactoryActive        = true
+
+	CakeFactoryFriendly   = false
+	CakeFactoryHealth     = 50
+	CakeFactoryDexterity  = 5
+	CakeFactoryMastery    = 5
+	CakeFactoryDamage     = 10
+	CakeFactoryVisibility = 1
+
+	CakeFactoryBonusCake = 5
+	CakeFactoryBonusGold = 2
+
+	//Paths to pictures
+	SmallCakeFactoryPicPath = ""
+	BigCakeFactoryPicPath   = ""
+)
+
 type CakeFactory struct {
 	ObjectName    string `json:"object_name"`
 	Repeatable    bool   `json:"constantly"`     //player can use repeatedly
@@ -24,6 +48,31 @@ type CakeFactory struct {
 	BonusGold int `json:"bonus_gold"`
 }
 
+//NewCakeFactory returns pointer to the default block
+func NewCakeFactory(owner Player, x, y int) *CakeFactory {
+	return &CakeFactory{
+		ObjectName:    CakeFactoryName,
+		Repeatable:    CakeFactoryReusable,
+		OccupiedField: CakeFactoryOccupiedField,
+		StopMove:      CakeFactoryStopsMoving,
+		Message:       CakeFactoryMessage,
+		Active:        CakeFactoryActive,
+		Friendly:      CakeFactoryFriendly,
+		Health:        CakeFactoryHealth,
+		Dexterity:     CakeFactoryDexterity,
+		Mastery:       CakeFactoryMastery,
+		Damage:        CakeFactoryDamage,
+		Visibility:    CakeFactoryVisibility,
+		BonusCake:     CakeFactoryBonusCake,
+		BonusGold:     CakeFactoryBonusGold,
+		X:             x,
+		Y:             y,
+		Owner:         owner.PlayerId,
+		SmallPic:      SmallCakeFactoryPicPath,
+		BigPic:        BigCakeFactoryPicPath,
+	}
+}
+
 //GetLocation returns x and y
 func (cf *CakeFactory) GetLocation() (int, int) {
 	return cf.X, cf.Y
@@ -31,7 +80,7 @@ func (cf *CakeFactory) GetLocation() (int, int) {
 
 //Interact just allows player to step onto this location
 func (cf *CakeFactory) Interact(player *Player) {
-	if cf.OccupiedField == true {
+	if !cf.OccupiedField {
 		player.X = cf.X
 		player.Y = cf.Y
 	}

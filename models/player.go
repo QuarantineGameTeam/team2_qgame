@@ -1,5 +1,27 @@
 package models
 
+import "github.com/QuarantineGameTeam/team2_qgame/api"
+
+const (
+	//Paths to pictures
+	SmallPlayerPicPath = ""
+	BigPlayerPicPath   = ""
+
+	PlayerActive  = true
+	PlayerMessage = "You've met the player"
+
+	//Start characteristics for each player
+	PlayerStartHealth     = 100
+	PlayerStartDexterity  = 10
+	PlayerStartMastery    = 10
+	PlayerStartDamage     = 20
+	PlayerStartSpeed      = 1
+	PlayerStartVisibility = 1
+	PlayerStartCakes      = 10
+	PlayerStartGold       = 10
+	PlayerStartCandy      = 10
+)
+
 //Player stores all information related to the ward of the user and its behaviour
 type Player struct {
 	X, Y       int
@@ -20,6 +42,29 @@ type Player struct {
 	ScoreCake  int `json:"bonus_cake"`
 	ScoreGold  int `json:"bonus_gold"`
 	ScoreCandy int `json:"bonus_candy"`
+}
+
+//NewPlayer returns pointer to the default Player
+func NewPlayer(owner api.User, x, y int) *Player {
+	return &Player{
+		Message:    PlayerMessage,
+		Active:     PlayerActive,
+		Health:     PlayerStartHealth,
+		Dexterity:  PlayerStartDexterity,
+		Mastery:    PlayerStartMastery,
+		Damage:     PlayerStartDamage,
+		Speed:      PlayerStartSpeed,
+		Visibility: PlayerStartVisibility,
+		ScoreCake:  PlayerStartCakes,
+		ScoreGold:  PlayerStartGold,
+		ScoreCandy: PlayerStartCandy,
+		X:          x,
+		Y:          y,
+		ObjectName: owner.Username,
+		PlayerId:   owner.ID,
+		SmallPic:   SmallPlayerPicPath,
+		BigPic:     BigPlayerPicPath,
+	}
 }
 
 //GetLocation returns x and y

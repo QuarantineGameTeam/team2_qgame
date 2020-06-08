@@ -1,5 +1,28 @@
 package models
 
+const (
+	//Default parameters
+	MonsterName          = "Monster"
+	MonsterReusable      = false
+	MonsterOccupiedField = false
+	MonsterStopsMoving   = true
+	MonsterMessage       = "There is a monster"
+	MonsterActive        = true
+
+	MonsterHealth     = 50
+	MonsterDexterity  = 15
+	MonsterMastery    = 15
+	MonsterDamage     = 20
+	MonsterVisibility = 1
+
+	MonsterBonusDexterity = 5
+	MonsterBonusMastery   = 5
+
+	//Paths to pictures
+	SmallMonsterPicPath = ""
+	BigMonsterPicPath   = ""
+)
+
 type Monster struct {
 	ObjectName    string `json:"object_name"`
 	Repeatable    bool   `json:"constantly"`     //player can use repeatedly
@@ -22,6 +45,29 @@ type Monster struct {
 	BonusMastery   int `json:"bonus_mastery"`
 }
 
+//NewMonster returns pointer to the default block
+func NewMonster(x, y int) *Monster {
+	return &Monster{
+		ObjectName:     MonsterName,
+		Repeatable:     MonsterReusable,
+		OccupiedField:  MonsterOccupiedField,
+		StopMove:       MonsterStopsMoving,
+		Message:        MonsterMessage,
+		Active:         MonsterActive,
+		Health:         MonsterHealth,
+		Dexterity:      MonsterDexterity,
+		Mastery:        MonsterMastery,
+		Damage:         MonsterDamage,
+		Visibility:     MonsterVisibility,
+		BonusDexterity: MonsterBonusDexterity,
+		BonusMastery:   MonsterBonusMastery,
+		X:              x,
+		Y:              y,
+		SmallPic:       SmallMonsterPicPath,
+		BigPic:         BigMonsterPicPath,
+	}
+}
+
 //GetLocation returns x and y
 func (mn *Monster) GetLocation() (int, int) {
 	return mn.X, mn.Y
@@ -29,7 +75,7 @@ func (mn *Monster) GetLocation() (int, int) {
 
 //Interact just allows player to step onto this location
 func (mn *Monster) Interact(player *Player) {
-	if mn.OccupiedField == true {
+	if !mn.OccupiedField {
 		player.X = mn.X
 		player.Y = mn.Y
 	}

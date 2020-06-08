@@ -1,5 +1,20 @@
 package models
 
+const (
+	//Default parameters
+	ChestName          = "Chest"
+	ChestReusable      = false
+	ChestOccupiedField = false
+	ChestStopsMoving   = true
+	ChestMessage       = "There is a chest"
+	ChestActive        = true
+	ChestAddMastery    = 10
+
+	//Paths to pictures
+	SmallChestPicPath = ""
+	BigChestPicPath   = ""
+)
+
 type Chest struct {
 	ObjectName      string `json:"object_name"`
 	Repeatable      bool   `json:"constantly"`     //player can use repeatedly
@@ -14,6 +29,23 @@ type Chest struct {
 	AddMasteryLevel int    `json:"add_mastery_level"`
 }
 
+//NewChest returns pointer to the default block
+func NewChest(x, y int) *Chest {
+	return &Chest{
+		ObjectName:      ChestName,
+		Repeatable:      ChestReusable,
+		OccupiedField:   ChestOccupiedField,
+		StopMove:        ChestStopsMoving,
+		Message:         ChestMessage,
+		Active:          ChestActive,
+		AddMasteryLevel: ChestAddMastery,
+		X:               x,
+		Y:               y,
+		SmallPic:        SmallChestPicPath,
+		BigPic:          BigChestPicPath,
+	}
+}
+
 //GetLocation returns x and y
 func (ch *Chest) GetLocation() (int, int) {
 	return ch.X, ch.Y
@@ -21,7 +53,7 @@ func (ch *Chest) GetLocation() (int, int) {
 
 //Interact just allows player to step onto this location
 func (ch *Chest) Interact(player *Player) {
-	if ch.OccupiedField == true {
+	if !ch.OccupiedField {
 		player.X = ch.X
 		player.Y = ch.Y
 	}

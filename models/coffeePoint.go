@@ -1,5 +1,20 @@
 package models
 
+const (
+	//Default parameters
+	CoffeeName          = "Coffee Point"
+	CoffeeReusable      = true
+	CoffeeOccupiedField = false
+	CoffeeStopsMoving   = true
+	CoffeeMessage       = "There is a coffee point"
+	CoffeeActive        = true
+	CoffeeAddHealth     = 10
+
+	//Paths to pictures
+	SmallCoffeePicPath = ""
+	BigCoffeePicPath   = ""
+)
+
 type CoffeePoint struct {
 	ObjectName    string `json:"object_name"`
 	Repeatable    bool   `json:"constantly"`     //player can use repeatedly
@@ -14,6 +29,23 @@ type CoffeePoint struct {
 	BonusHealth   int    `json:"bonus_health"` //maximum allowed value = Health of Player at start
 }
 
+//NewCoffeePoint returns pointer to the default block
+func NewCoffeePoint(x, y int) *CoffeePoint {
+	return &CoffeePoint{
+		ObjectName:    CoffeeName,
+		Repeatable:    CoffeeReusable,
+		OccupiedField: CoffeeOccupiedField,
+		StopMove:      CoffeeStopsMoving,
+		Message:       CoffeeMessage,
+		Active:        CoffeeActive,
+		BonusHealth:   CoffeeAddHealth,
+		X:             x,
+		Y:             y,
+		SmallPic:      SmallCoffeePicPath,
+		BigPic:        BigCoffeePicPath,
+	}
+}
+
 //GetLocation returns x and y
 func (cp *CoffeePoint) GetLocation() (int, int) {
 	return cp.X, cp.Y
@@ -21,7 +53,7 @@ func (cp *CoffeePoint) GetLocation() (int, int) {
 
 //Interact just allows player to step onto this location
 func (cp *CoffeePoint) Interact(player *Player) {
-	if cp.OccupiedField == true {
+	if !cp.OccupiedField {
 		player.X = cp.X
 		player.Y = cp.Y
 	}

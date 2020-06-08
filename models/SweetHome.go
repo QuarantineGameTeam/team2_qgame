@@ -1,5 +1,35 @@
 package models
 
+const (
+	//Default parameters
+	SweetHomeName          = "Sweet Home"
+	SweetHomeReusable      = true
+	SweetHomeOccupiedField = true
+	SweetHomeStopsMoving   = true
+	SweetHomeMessage       = "There is a sweet home"
+	SweetHomeActive        = true
+
+	SweetHomeFriendly   = true
+	SweetHomeHealth     = 120
+	SweetHomeDexterity  = 50
+	SweetHomeMastery    = 50
+	SweetHomeDamage     = 40
+	SweetHomeVisibility = 1
+
+	SweetHomeBonusCandy      = 5
+	SweetHomeBonusCake       = 2
+	SweetHomeBonusGold       = 5
+	SweetHomeBonusHealth     = 2
+	SweetHomeBonusDexterity  = 5
+	SweetHomeBonusMastery    = 2
+	SweetHomeBonusVisibility = 5
+	SweetHomeBonusSpeed      = 2
+
+	//Paths to pictures
+	SmallSweetHomePicPath = ""
+	BigSweetHomePicPath   = ""
+)
+
 type SweetHome struct {
 	ObjectName    string `json:"object_name"`
 	Repeatable    bool   `json:"constantly"`     //player can use repeatedly
@@ -30,6 +60,37 @@ type SweetHome struct {
 	BonusMastery    int `json:"bonus_mastery"`
 	BonusVisibility int `json:"bonus_visibility"`
 	BonusSpeed      int `json:"bonus_speed"`
+}
+
+//NewSweetHome returns pointer to the default block
+func NewSweetHome(owner Player, x, y int) *SweetHome {
+	return &SweetHome{
+		ObjectName:      SweetHomeName,
+		Repeatable:      SweetHomeReusable,
+		OccupiedField:   SweetHomeOccupiedField,
+		StopMove:        SweetHomeStopsMoving,
+		Message:         SweetHomeMessage,
+		Active:          SweetHomeActive,
+		Friendly:        SweetHomeFriendly,
+		Health:          SweetHomeHealth,
+		Dexterity:       SweetHomeDexterity,
+		Mastery:         SweetHomeMastery,
+		Damage:          SweetHomeDamage,
+		Visibility:      SweetHomeVisibility,
+		X:               x,
+		Y:               y,
+		Owner:           owner.PlayerId,
+		SmallPic:        SmallSweetHomePicPath,
+		BigPic:          BigSweetHomePicPath,
+		BonusCake:       SweetHomeBonusCake,
+		BonusCandy:      SweetHomeBonusCandy,
+		BonusGold:       SweetHomeBonusGold,
+		BonusHealth:     SweetHomeBonusHealth,
+		BonusDexterity:  SweetHomeDexterity,
+		BonusMastery:    SweetHomeBonusMastery,
+		BonusVisibility: SweetHomeBonusVisibility,
+		BonusSpeed:      SweetHomeBonusSpeed,
+	}
 }
 
 //GetLocation returns x and y
