@@ -220,8 +220,20 @@ func (dbh *DBHandler) CreateGamesTable() error {
 
 //InsertGame adds a game to the Games table
 func (dbh *DBHandler) InsertGame(game game.Game) error {
+	bytes, err := json.Marshal(game.Locations)
+	if err != nil {
+		return err
+	}
+	game.GameJSON = string(bytes)
+
+	bytes, err = json.Marshal(game.Players)
+	if err != nil {
+		log.Print(err)
+	}
+	game.PlayersJSON = string(bytes)
+
 	//Player structure is described in the models package file player.go
-	_, err := dbh.Connection.Exec(`INSERT INTO games (game_json, player_id, startmove_time, players_json, state) 
+	_, err = dbh.Connection.Exec(`INSERT INTO games (game_json, player_id, startmove_time, players_json, state) 
 									VALUES (?, ?, ?, ?, ?);`,
 		game.GameJSON, game.PlayerID, game.StartMoveTime, game.PlayersJSON, game.State)
 

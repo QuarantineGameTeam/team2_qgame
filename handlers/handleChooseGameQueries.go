@@ -64,13 +64,14 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 		}
 	}
 
+	// WEIRD ASYNC RIGHT NOW
 	// Sending move buttons one by one for players
-	//_, err = client.SendMessage(api.Message {
-	//	ChatID: query.FromUser.ID,
-	//	Text: "Your turn.",
-	//	InlineMarkup: mainGameMarkup,
-	//})
-	//if err != nil {
-	//	log.Println(err)
-	//}
+	_, err = client.SendMessage(api.Message {
+		ChatID: query.FromUser.ID,
+		Text: "Your turn.",
+		InlineMarkup: mainGameMarkup,
+	})
+	if err != nil {
+		log.Println(err)
+	}
 }

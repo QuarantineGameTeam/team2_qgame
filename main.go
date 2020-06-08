@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	
 	firstUpdate := 0
 	lastUpdate := 0
 	var update api.Update

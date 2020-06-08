@@ -55,6 +55,8 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 			log.Println("Unable to insert game.\n", err)
 		}
 	} else {
+		// else joining the game which is in Matchmaking state
+		joined := false
 		for _, gm := range games {
 			if gm.State == game.StateMatchMaking {
 				// adding players to 0x0 location to move after further clan choosing
@@ -63,8 +65,20 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 					gm.State = game.StateRunning
 					sendChooseClanMarkup(client, gm)
 				}
-			} else {
-				fmt.Printf("Game %v is full", *gm)
+				joined = true
+				break
+			}
+		}
+		if !joined {
+			// Creating new game if there are no opened games
+			gm, err := game.NewGame(&query.FromUser)
+			if err != nil {
+				log.Println(err)
+			}
+
+			err = dbh.InsertGame(*gm)
+			if err != nil {
+				log.Println("Unable to insert game.\n", err)
 			}
 		}
 	}
