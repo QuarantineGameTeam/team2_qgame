@@ -1,5 +1,29 @@
 package models
 
+const (
+	//Default parameters
+	CandyFactoryName          = "Cake Factory"
+	CandyFactoryReusable      = true
+	CandyFactoryOccupiedField = true
+	CandyFactoryStopsMoving   = true
+	CandyFactoryMessage       = "There is a candy factory"
+	CandyFactoryActive        = true
+
+	CandyFactoryFriendly   = false
+	CandyFactoryHealth     = 50
+	CandyFactoryDexterity  = 5
+	CandyFactoryMastery    = 5
+	CandyFactoryDamage     = 10
+	CandyFactoryVisibility = 1
+
+	CandyFactoryBonusCandy = 5
+	CandyFactoryBonusGold  = 2
+
+	//Paths to pictures
+	SmallCandyFactoryPicPath = ""
+	BigCandyFactoryPicPath   = ""
+)
+
 type CandyFactory struct {
 	ObjectName    string `json:"object_name"`
 	Repeatable    bool   `json:"constantly"`     //player can use repeatedly
@@ -24,6 +48,31 @@ type CandyFactory struct {
 	BonusGold  int `json:"bonus_gold"`
 }
 
+//NewCakeFactory returns pointer to the default block
+func NewCandyFactory(owner Player, x, y int) *CakeFactory {
+	return &CakeFactory{
+		ObjectName:    CandyFactoryName,
+		Repeatable:    CandyFactoryReusable,
+		OccupiedField: CandyFactoryOccupiedField,
+		StopMove:      CandyFactoryStopsMoving,
+		Message:       CandyFactoryMessage,
+		Active:        CandyFactoryActive,
+		Friendly:      CandyFactoryFriendly,
+		Health:        CandyFactoryHealth,
+		Dexterity:     CandyFactoryDexterity,
+		Mastery:       CandyFactoryMastery,
+		Damage:        CandyFactoryDamage,
+		Visibility:    CandyFactoryVisibility,
+		BonusCake:     CandyFactoryBonusCandy,
+		BonusGold:     CandyFactoryBonusGold,
+		X:             x,
+		Y:             y,
+		Owner:         owner.PlayerId,
+		SmallPic:      SmallCandyFactoryPicPath,
+		BigPic:        BigCandyFactoryPicPath,
+	}
+}
+
 //GetLocation returns x and y
 func (cf *CandyFactory) GetLocation() (int, int) {
 	return cf.X, cf.Y
@@ -31,7 +80,7 @@ func (cf *CandyFactory) GetLocation() (int, int) {
 
 //Interact just allows player to step onto this location
 func (cf *CandyFactory) Interact(player *Player) {
-	if cf.OccupiedField == true {
+	if !cf.OccupiedField {
 		player.X = cf.X
 		player.Y = cf.Y
 	}

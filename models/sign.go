@@ -1,5 +1,19 @@
 package models
 
+const (
+	//Default parameters
+	SignName          = "Sign"
+	SignReusable      = false
+	SignOccupiedField = false
+	SignStopsMoving   = true
+	SignMessage       = "There is a sign"
+	SignActive        = true
+
+	//Paths to pictures
+	SmallSignPicPath = ""
+	BigSignPicPath   = ""
+)
+
 type Sign struct {
 	ObjectName    string `json:"object_name"`
 	Repeatable    bool   `json:"constantly"`     //player can use repeatedly
@@ -13,6 +27,22 @@ type Sign struct {
 	BigPic        string `json:"big_pic"`
 }
 
+//NewSign returns pointer to the default block
+func NewSign(x, y int) *Sign {
+	return &Sign{
+		ObjectName:    SignName,
+		Repeatable:    SignReusable,
+		OccupiedField: SignOccupiedField,
+		StopMove:      SignStopsMoving,
+		Message:       SignMessage,
+		Active:        SignActive,
+		X:             x,
+		Y:             y,
+		SmallPic:      SmallSignPicPath,
+		BigPic:        BigSignPicPath,
+	}
+}
+
 //GetLocation returns x and y
 func (sn *Sign) GetLocation() (int, int) {
 	return sn.X, sn.Y
@@ -20,7 +50,7 @@ func (sn *Sign) GetLocation() (int, int) {
 
 //Interact just allows player to step onto this location
 func (sn *Sign) Interact(player *Player) {
-	if sn.OccupiedField == true {
+	if !sn.OccupiedField {
 		player.X = sn.X
 		player.Y = sn.Y
 	}
