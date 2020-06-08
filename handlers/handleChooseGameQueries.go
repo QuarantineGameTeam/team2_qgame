@@ -45,7 +45,7 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 	gm.LocatePlayers()
 
 	photoLocation := "temp/testpic.png"
-	err = drawers.CreateFullViewPhoto(gm.Locations, "testpic")
+	err = drawers.CreateFullViewPhoto(gm.Locations, gm.Players, "testpic")
 	if err != nil {
 		log.Println(err)
 	}

@@ -1,7 +1,6 @@
 package drawers
 
 import (
-	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 	"math/rand"

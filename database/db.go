@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/QuarantineGameTeam/team2_qgame/utils"
 	"log"
 
 	"github.com/QuarantineGameTeam/team2_qgame/api"
@@ -281,7 +282,7 @@ func (dbh *DBHandler) GetGames() []*game.Game {
 				log.Println(err)
 			}
 
-			readingGame.Locations = utils.GetLocations(readingGame.GameJSON)
+			readingGame.Locations, err = utils.GetLocations(readingGame.GameJSON)
 
 			err = json.Unmarshal([]byte(readingGame.PlayersJSON), &readingGame.Players)
 			if err != nil {
