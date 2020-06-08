@@ -16,17 +16,17 @@ const (
 )
 
 type CoffeePoint struct {
-	ObjectName    string `json:"object_name"`
-	Repeatable    bool   `json:"constantly"`     //player can use repeatedly
-	OccupiedField bool   `json:"occupied_field"` //If true -player can occupie this field
-	StopMove      bool   `json:"stop_move"`      //Changes the Player speed parameter.
+	ObjectName    string `json:"object_name" mapstructure:"object_name"`
+	Repeatable    bool   `json:"constantly" mapstructure:"constantly"`     //player can use repeatedly
+	OccupiedField bool   `json:"occupied_field" mapstructure:"occupied_field"` //If true -player can occupie this field
+	StopMove      bool   `json:"stop_move" mapstructure:"stop_move"`      //Changes the Player speed parameter.
 	Message       string `json:"message"`        //
 	Active        bool   `json:"active"`         //if active = true, then drawing on the map and use the functional
 	X             int
 	Y             int
-	SmallPic      string `json:"small_pic"` //path to pic
-	BigPic        string `json:"big_pic"`
-	BonusHealth   int    `json:"bonus_health"` //maximum allowed value = Health of Player at start
+	SmallPic      string `json:"small_pic" mapstructure:"small_pic"` //path to pic
+	BigPic        string `json:"big_pic"  mapstructure:"big_pic"`
+	BonusHealth   int    `json:"bonus_health" mapstructure:"bonus_health"` //maximum allowed value = Health of Player at start
 }
 
 //NewCoffeePoint returns pointer to the default block

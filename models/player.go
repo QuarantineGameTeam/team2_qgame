@@ -25,7 +25,7 @@ const (
 //Player stores all information related to the ward of the user and its behaviour
 type Player struct {
 	X, Y       int
-	ObjectName string `json:"object_name"`
+	ObjectName string `json:"object_name" mapstructure:"object_name"`
 	Message    string `json:"message"` //
 	PlayerId   int    `json:"player_id"`
 	SmallPic   string `json:"small_pic"` //path to pic
@@ -72,7 +72,7 @@ func (p *Player) GetLocation() (int, int) {
 	return p.X, p.Y
 }
 
-func (p *Player) Interact(player *Player){
+func (p *Player) Interact(player *Player) {
 	// ...
 }
 

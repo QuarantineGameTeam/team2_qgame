@@ -15,16 +15,16 @@ const (
 )
 
 type Block struct {
-	ObjectName    string `json:"object_name"`
-	Repeatable    bool   `json:"constantly"` //player can use repeatedly
-	OccupiedField bool   `json:"occupied_field"`
-	StopMove      bool   `json:"stop_move"` //Changes the Player speed parameter.
+	ObjectName    string `json:"object_name" mapstructure:"object_name"`
+	Repeatable    bool   `json:"constantly" mapstructure:"constantly"` //player can use repeatedly
+	OccupiedField bool   `json:"occupied_field" mapstructure:"occupied_field"`
+	StopMove      bool   `json:"stop_move" mapstructure:"stop_move"` //Changes the Player speed parameter.
 	Message       string `json:"message"`   //You tried to overcome this obstacle, but the forces left you and you remained in the same place
 	Active        bool   `json:"active"`    //if active = true, then drawing on the map and use the functional
 	X             int
 	Y             int
-	SmallPic      string `json:"small_pic"` //path to pic
-	BigPic        string `json:"big_pic"`
+	SmallPic      string `json:"small_pic" mapstructure:"small_pic"` //path to pic
+	BigPic        string `json:"big_pic"  mapstructure:"big_pic"`
 }
 
 //NewBlock returns pointer to the default block
