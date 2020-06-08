@@ -57,16 +57,10 @@ func NewGame(starter *api.User) (*Game, error) {
 
 func generateLocations(starter *api.User) []models.Location {
 	// has to perform generating. Right now its giving out some of actual nothing ...
+	player := models.NewPlayer(*starter, 2, 3)
+
 	return []models.Location{
-		&models.CandyFactory{
-			ObjectName: "cf1",
-			SmallPic:   "photos/candy_factory.png",
-			X:          3, Y: 4,
-		},
-		&models.Chest{
-			ObjectName: "ch1",
-			SmallPic:   "photos/chest.png",
-			X:          4, Y: 6,
-		},
+		models.NewCandyFactory(*player, 3, 4),
+		models.NewChest(3, 6),
 	}
 }

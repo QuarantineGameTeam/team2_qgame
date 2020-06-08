@@ -1,7 +1,7 @@
 package config
 
 const (
-	BotToken = "908826736:AAHe3ne_qVgYIFtJg0cSFGPpbiEz41oX5Kk"
+	BotToken = "1285255270:AAFdQW1_ygN6CxQU8DzRBHLS3YLaKswLdqY"
 )
 
 // Separated in order to make iotas work properly

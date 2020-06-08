@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/drawers"
-	"github.com/QuarantineGameTeam/team2_qgame/game"
 	"log"
 )
 
@@ -37,9 +36,8 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 
 	// Go for determining player's game
 	gm := getPlayerGame(query.FromUser)
-	if err != nil || gm == new(game.Game) {
-		log.Println("Error getting game with index 7.\n",err)
-	}
+
+	fmt.Print(gm)
 
 	// Positioning them near the castles
 	gm.LocatePlayers()

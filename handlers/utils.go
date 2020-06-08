@@ -56,37 +56,39 @@ func getPlayerGame(user api.User) *game.Game {
 func updateGameAfterMove(game *game.Game, player *models.Player) {
 	fmt.Printf("Game before an update: %v", *game)
 
-	locations := game.Locations
-	for _, l := range locations {
-		switch l.(type) {
-		case *models.Player:
-			if l.(*models.Player).PlayerId == player.PlayerId {
-				l = player
-			}
-		}
-	}
-	bytes, err := json.Marshal(locations)
-	if err != nil {
-		log.Println(err)
-	}
-	game.GameJSON = string(bytes)
-
 	players := game.Players
-	for _, p := range players {
+	for i, p := range players {
 		if p.PlayerId == player.PlayerId {
-			p = *player
+			game.Players[i] = *player
 		}
 	}
 
-	bytes, err = json.Marshal(players)
+	bytes, err := json.Marshal(players)
 	if err != nil {
 		log.Println(err)
 	}
 	game.PlayersJSON = string(bytes)
 
 	updateDBGame(game)
+	updateDBPlayer(player)
 
 	fmt.Printf("Game after an update: %v", *game)
+}
+
+func updateDBPlayer(player *models.Player) {
+	dbh, err := database.NewDBHandler()
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = dbh.Update("players", "x", player.X, "player_id", player.PlayerId)
+	if err != nil {
+		log.Println(err)
+	}
+	err = dbh.Update("players", "y", player.Y, "player_id", player.PlayerId)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func updateDBGame(game *game.Game) {

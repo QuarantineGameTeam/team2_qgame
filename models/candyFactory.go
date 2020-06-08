@@ -20,7 +20,7 @@ const (
 	CandyFactoryBonusGold  = 2
 
 	//Paths to pictures
-	SmallCandyFactoryPicPath = ""
+	SmallCandyFactoryPicPath = "photos/candy_factory.png"
 	BigCandyFactoryPicPath   = ""
 )
 

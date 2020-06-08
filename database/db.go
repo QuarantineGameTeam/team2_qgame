@@ -283,11 +283,17 @@ func (dbh *DBHandler) GetGames() []*game.Game {
 			}
 
 			readingGame.Locations, err = utils.GetLocations(readingGame.GameJSON)
+			if err != nil {
+				log.Println("Error in reading ", err)
+			}
 
 			err = json.Unmarshal([]byte(readingGame.PlayersJSON), &readingGame.Players)
 			if err != nil {
 				log.Println(err)
 			}
+
+			// todelete
+			fmt.Print(readingGame.Players)
 			
 			games = append(games, readingGame)
 		}

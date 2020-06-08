@@ -11,7 +11,7 @@ const (
 	ChestAddMastery    = 10
 
 	//Paths to pictures
-	SmallChestPicPath = ""
+	SmallChestPicPath = "photos/chest.png"
 	BigChestPicPath   = ""
 )
 
