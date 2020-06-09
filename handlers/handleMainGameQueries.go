@@ -16,7 +16,7 @@ func handleMainGameQueries(client *api.Client, query api.CallBackQuery) {
 	case "castle":
 
 	case "up", "down", "left", "right":
-			handleControlsQueries(client, query)
+		handleControlsQueries(client, query)
 	}
 }
 
@@ -58,18 +58,16 @@ func handleControlsQueries(client *api.Client, query api.CallBackQuery) {
 		log.Println(err)
 	}
 
-	for _, p := range game.Players {
-		err = client.SendPhoto(p.PlayerId, photoLocation)
-		if err != nil {
-			log.Println(err)
-		}
+	err = client.SendPhoto(query.FromUser.ID, photoLocation)
+	if err != nil {
+		log.Println(err)
 	}
 
 	// WEIRD ASYNC RIGHT NOW
 	// Sending move buttons one by one for players
-	_, err = client.SendMessage(api.Message {
-		ChatID: query.FromUser.ID,
-		Text: "Your turn.",
+	_, err = client.SendMessage(api.Message{
+		ChatID:       query.FromUser.ID,
+		Text:         "Your turn.",
 		InlineMarkup: mainGameMarkup,
 	})
 	if err != nil {
@@ -77,4 +75,9 @@ func handleControlsQueries(client *api.Client, query api.CallBackQuery) {
 	}
 
 	// ----------------- //
+
+	err = client.DeleteMessage(query.Message)
+	if err != nil {
+		log.Println("Unable to delete message: ", err)
+	}
 }

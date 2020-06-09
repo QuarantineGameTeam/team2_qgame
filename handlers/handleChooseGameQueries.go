@@ -42,24 +42,27 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 	// Positioning them near the castles
 	gm.LocatePlayers()
 
+	err = client.DeleteMessage(query.Message)
+	if err != nil {
+		log.Println("Unable to delete message: ", err)
+	}
+
 	photoLocation := "temp/testpic.png"
 	err = drawers.CreateFullViewPhoto(gm.Locations, gm.Players, "testpic")
 	if err != nil {
 		log.Println(err)
 	}
 
-	for _, p := range gm.Players {
-		err = client.SendPhoto(p.PlayerId, photoLocation)
-		if err != nil {
-			log.Println(err)
-		}
+	err = client.SendPhoto(query.FromUser.ID, photoLocation)
+	if err != nil {
+		log.Println(err)
 	}
 
 	// WEIRD ASYNC RIGHT NOW
 	// Sending move buttons one by one for players
-	_, err = client.SendMessage(api.Message {
-		ChatID: query.FromUser.ID,
-		Text: "Your turn.",
+	_, err = client.SendMessage(api.Message{
+		ChatID:       query.FromUser.ID,
+		Text:         "Your turn.",
 		InlineMarkup: mainGameMarkup,
 	})
 	if err != nil {

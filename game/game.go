@@ -39,6 +39,7 @@ func NewGame(starter *api.User) (*Game, error) {
 	jsonBytes, err := json.Marshal(game.Locations)
 	game.GameJSON = string(jsonBytes)
 	game.State = StateMatchMaking
+	game.PlayerID = starter.ID
 	game.Players = []models.Player{
 		*models.NewPlayer(*starter, 0, 0),
 	}

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/config"
 	"github.com/QuarantineGameTeam/team2_qgame/database"
@@ -64,7 +65,24 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 		for _, gm := range games {
 			if gm.State == game.StateMatchMaking {
 				// adding players to 0x0 location to move after further clan choosing
-				gm.Players = append(gm.Players, *models.NewPlayer(query.FromUser, 0, 0))
+				p := models.NewPlayer(query.FromUser, 1, 0)
+				err = dbh.InsertPlayer(*p)
+				if err != nil {
+					log.Println(err)
+				}
+
+				gm.Players = append(gm.Players, *p)
+
+				bytes, err := json.Marshal(gm.Players)
+				if err != nil {
+					log.Println(err)
+				}
+				gm.PlayersJSON = string(bytes)
+				err = dbh.Update("games", "players_json", gm.PlayersJSON, "game_id", gm.GameID)
+				if err != nil {
+					log.Println("Unable to update table games: ", err)
+				}
+
 				if len(gm.Players) >= game.PlayersCount {
 					gm.State = game.StateRunning
 					sendChooseClanMarkup(client, gm)
@@ -85,6 +103,11 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 				log.Println("Unable to insert game.\n", err)
 			}
 		}
+	}
+
+	err = client.DeleteMessage(query.Message)
+	if err != nil {
+		log.Println("Unable to delete message: ", err)
 	}
 }
 

@@ -59,8 +59,8 @@ func CreatePartViewPhoto(locations []models.Location, players []models.Player, d
 	drawGrid(context, horizon)
 
 	objects := locations
-	for _, p := range players {
-		objects = append(objects, &p)
+	for i := 0; i < len(players); i++ {
+		objects = append(objects, &players[i])
 	}
 
 	for _, l := range objects {
@@ -110,10 +110,9 @@ func CreateMapViewPhoto(locations []models.Location, players []models.Player, vi
 	drawGrid(context, defaultDimension)
 
 	objects := locations
-	for _, p := range players {
-		objects = append(objects, &p)
+	for i := 0; i < len(players); i++ {
+		objects = append(objects, &players[i])
 	}
-
 
 	for _, l := range objects {
 		locX, locY := l.GetLocation()
@@ -144,10 +143,9 @@ func CreateFullViewPhoto(locations []models.Location, players []models.Player, s
 	drawGrid(context, defaultDimension)
 
 	objects := locations
-	for _, p := range players {
-		objects = append(objects, &p)
+	for i := 0; i < len(players); i++ {
+		objects = append(objects, &players[i])
 	}
-
 
 	for _, l := range objects {
 		locX, locY := l.GetLocation()
