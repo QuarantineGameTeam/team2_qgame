@@ -17,7 +17,7 @@ type SweetHome struct {
 	Health     int  `json:"health"`
 	Dexterity  int  `json:"dexterity"`
 	Mastery    int  `json:"mastery"`
-	Damage     int  `json:"speed"`
+	Damage     int  `json:"damage"`
 	Visibility int  `json:"visibility"`
 	//bonus every day
 	BonusCake  int `json:"bonus_cake"`

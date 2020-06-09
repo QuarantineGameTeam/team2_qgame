@@ -15,7 +15,7 @@ type Monster struct {
 	Health     int `json:"health"`
 	Dexterity  int `json:"dexterity"`
 	Mastery    int `json:"mastery"`
-	Damage     int `json:"speed"`
+	Damage     int `json:"damage"`
 	Visibility int `json:"visibility"`
 	//bonus
 	BonusDexterity int `json:"bonus_dexterity"`
