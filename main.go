@@ -1,15 +1,11 @@
 package main
 
 import (
-<<<<<<< HEAD
 	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/config"
+	"github.com/QuarantineGameTeam/team2_qgame/game"
 	"github.com/QuarantineGameTeam/team2_qgame/handlers"
 	"log"
-=======
-	"log"
-	"team2_qgame/api"
-	"team2_qgame/handlers"
->>>>>>> f42b3f3afd86bec62aa8bc6a094df7066142ab24
 	"time"
 )
 
@@ -20,11 +16,11 @@ var (
 func main() {
 	// Setting up telegram bot client
 	var err error
-	client, err = api.NewClient(botToken)
+	client, err = api.NewClient(config.BotToken)
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	
 	firstUpdate := 0
 	lastUpdate := 0
 	var update api.Update
@@ -44,6 +40,8 @@ func main() {
 				go handlers.HandleUpdate(client, update)
 			}
 		}
+
+		game.GameUpdate()
 
 		time.Sleep(time.Millisecond * 100)
 	}

@@ -2,47 +2,89 @@ package handlers
 
 import (
 	"fmt"
-<<<<<<< HEAD
 	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/config"
 	"github.com/QuarantineGameTeam/team2_qgame/database"
 	"log"
-=======
-	"log"
-	"team2_qgame/api"
-	"team2_qgame/database"
->>>>>>> f42b3f3afd86bec62aa8bc6a094df7066142ab24
 )
 
 func handleUpdateMessage(client *api.Client, update api.Update) {
 	message := update.Message
+
 	if message.Text == "/start" {
 		handleStartMessage(client, message)
+	} else if fitsState(message.FromUser, config.StateChangingName) {
+		handleChangeNickNameMessage(client, message)
 	}
 }
 
 func handleStartMessage(client *api.Client, message api.UpdateMessage) {
-	// Setting up database handler
-	dbh := database.NewDBHandler()
+	dbh, err := database.NewDBHandler()
+	if err != nil {
+		log.Println(err)
+	}
 
-	var err error
-	if dbh.ContainsUser(message.FromUser) {
-		err = client.SendMessage(api.Message{
+	contains, err := dbh.ContainsUser(message.FromUser)
+	if err != nil {
+		log.Println(err)
+	}
+
+	if contains {
+		_, err = client.SendMessage(api.Message{
 			ChatID:       message.FromUser.ID,
 			Text:         fmt.Sprintf("Hello, %s! Welcome back!", message.FromUser.FirstName),
-			InlineMarkup: startMarkup(message),
+			InlineMarkup: startMarkup,
 		})
 	} else {
-		err = client.SendMessage(api.Message{
+		_, err = client.SendMessage(api.Message{
 			ChatID:       message.FromUser.ID,
 			Text:         fmt.Sprintf("Hello, %s! Welcome to CandyWarGO!", message.FromUser.FirstName),
-			InlineMarkup: startMarkup(message),
+			InlineMarkup: startMarkup,
 		})
 
 		// adding user to database if it is not there
-		dbh.InsertUser(message.FromUser)
+		err = dbh.InsertUser(message.FromUser)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 
 	if err != nil {
 		log.Println(err)
 	}
+}
+
+func handleChangeNickNameMessage(client *api.Client, message api.UpdateMessage) {
+	success := true
+	dbh, err := database.NewDBHandler()
+	if err != nil {
+		log.Println(err)
+		success = false
+	}
+
+	err = dbh.Update("users", "nickname", message.Text, "telegram_id", message.FromUser.ID)
+	if err != nil {
+		log.Println(err)
+		success = false
+	}
+
+	err = dbh.Update("users", "state", config.StateNone, "telegram_id", message.FromUser.ID)
+	if err != nil {
+		log.Println(err)
+		success = false
+	}
+
+	var msg string
+	if success {
+		msg = "Nickname changed successfully."
+	} else {
+		msg = "Sorry. Some error happened."
+	}
+
+	_, err = client.SendMessage(
+		api.Message{
+			ChatID: message.FromUser.ID,
+			Text:   msg,
+			InlineMarkup: startMarkup,
+		})
 }

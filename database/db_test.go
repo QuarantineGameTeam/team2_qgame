@@ -2,8 +2,10 @@ package database
 
 import (
 	"fmt"
-	"team2_qgame/api"
 	"testing"
+
+	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/models"
 )
 
 func TestDBHandler(t *testing.T) {
@@ -30,15 +32,26 @@ func TestDBHandler(t *testing.T) {
 		},
 	}
 
-	db := NewDBHandler()
+	db, err := NewDBHandler()
+	if err != nil {
+		t.Errorf("Got error: %v", err)
+	}
 	//Insert test
 	for _, tt := range tests {
 		testname := fmt.Sprintf("Insert user (%d, %s, %d) into database, if there is not one", tt.ID, tt.Username, tt.State)
 		t.Run(testname, func(t *testing.T) {
-			if !db.ContainsUser(tt) {
-				db.InsertUser(tt)
+			if c, err := db.ContainsUser(tt); !c {
+				if err == nil {
+					err = db.InsertUser(tt)
+					if err != nil {
+						t.Errorf("Got error: %v", err)
+					}
+				}
 			}
-			user := db.GetUserByID(tt.ID)
+			user, err := db.GetUserByID(tt.ID)
+			if err != nil {
+				t.Errorf("Got error: %v", err)
+			}
 			if user.Username != tt.Username || user.State != tt.State {
 				t.Errorf("got User (%d, %s, %d), want User (%d, %s, %d)", user.ID, user.Username, user.State, tt.ID, tt.Username, tt.State)
 			}
@@ -48,8 +61,8 @@ func TestDBHandler(t *testing.T) {
 	for _, tt := range tests {
 		testname := fmt.Sprintf("Check, if user (%d, %s) has been already inserted into database", tt.ID, tt.Username)
 		t.Run(testname, func(t *testing.T) {
-			flag := db.NameExists(tt.Username)
-			if !flag {
+			flag, err := db.NameExists(tt.Username)
+			if !flag || err != nil {
 				t.Errorf("got %v, want %v", flag, true)
 			}
 		})
@@ -59,10 +72,42 @@ func TestDBHandler(t *testing.T) {
 		newName := fmt.Sprintf("player%d", i)
 		testname := fmt.Sprintf("Update user (%d, %s) to user (%d, %s)", tt.ID, tt.Username, tt.ID, newName)
 		t.Run(testname, func(t *testing.T) {
-			db.Update("users", "nickname", newName, "telegram_id", tt.ID)
-			user := db.GetUserByID(tt.ID)
-			if user.Username != newName {
+			err := db.Update("users", "nickname", newName, "telegram_id", tt.ID)
+			if err != nil {
+				t.Errorf("Got error: %v", err)
+			}
+			user, err := db.GetUserByID(tt.ID)
+			if user.Username != newName || err != nil {
 				t.Errorf("got User (%d, %s, %d), want User (%d, %s, %d)", user.ID, user.Username, user.State, tt.ID, newName, tt.State)
+			}
+		})
+	}
+
+	//Players test
+	var players = []models.Player{
+		*models.NewPlayer(tests[0], 2, 4),
+		*models.NewPlayer(tests[1], 1, 7),
+		*models.NewPlayer(tests[2], 0, 4),
+		*models.NewPlayer(tests[3], 5, 5),
+	}
+
+	for i, tt := range players {
+		testname := fmt.Sprintf("Insert new player from user (%d, %s)", tests[i].ID, tests[i].Username)
+		t.Run(testname, func(t *testing.T) {
+			if c, err := db.ContainsPlayer(tt); !c {
+				if err == nil {
+					err = db.InsertPlayer(tt)
+					if err != nil {
+						t.Errorf("Got error: %v", err)
+					}
+				}
+			}
+			player, err := db.GetPlayerByID(tt.PlayerId)
+			if err != nil {
+				t.Errorf("Got error: %v", err)
+			}
+			if player.PlayerId != tests[i].ID || player.ObjectName != tests[i].Username {
+				t.Errorf("got Player (%d, %s ...), want User (%d, %s ...)", player.PlayerId, player.ObjectName, tests[i].ID, tests[i].Username)
 			}
 		})
 	}

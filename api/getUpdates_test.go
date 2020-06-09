@@ -18,8 +18,6 @@ func TestClient_GetUpdates(t *testing.T) {
 	for lastUpdate-firstUpdate < 10 {
 		updates := client.GetUpdates(lastUpdate + 1)
 		if len(updates) != 0 {
-			fmt.Println(updates[0])
-
 			if firstUpdate == 0 {
 				firstUpdate = updates[0].UpdateID
 			}

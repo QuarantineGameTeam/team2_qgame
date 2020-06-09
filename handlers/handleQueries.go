@@ -1,8 +1,8 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
-	"log"
 	"strings"
 )
 
@@ -11,21 +11,8 @@ var (
 )
 
 func handleUpdateCallBackQuery(client *api.Client, update api.Update) {
+	fmt.Println("Update with query:", update)
 	handleMainMenuQueries(client, update.CallBackQuery)
-}
-
-func handleMainMenuQueries(c *api.Client, q api.CallBackQuery) {
-	var err error
-
-	if startsWith(q.CallBackData, "joingame") {
-		err = c.AnswerCallBackQuery(q, "Joining the game, please wait...", false)
-	} else if startsWith(q.CallBackData, "stats") {
-		err = c.AnswerCallBackQuery(q, "Stats...", true)
-	} else if startsWith(q.CallBackData, "changenickname") {
-		err = c.AnswerCallBackQuery(q, "OK. Type in your nickname.", false)
-	}
-
-	if err != nil {
-		log.Println(err)
-	}
+	handleChooseGameQueries(client, update.CallBackQuery)
+	handleMainGameQueries(client, update.CallBackQuery)
 }

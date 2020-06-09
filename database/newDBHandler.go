@@ -8,16 +8,31 @@ const (
 )
 
 //NewDBHandler returns pointer to the default ready to use DBHandler
-func NewDBHandler() *DBHandler {
+func NewDBHandler() (*DBHandler, error) {
 	dbh := &DBHandler{
 		DriverName: Driver,
 		DBPath:     Path,
 	}
-	dbh.Connect()
-<<<<<<< HEAD
-	dbh.CreateTables()
-=======
-	dbh.CreateUsersTable()
->>>>>>> f42b3f3afd86bec62aa8bc6a094df7066142ab24
-	return dbh
+	err := dbh.Connect()
+	if err != nil {
+		return dbh, err
+	}
+
+	err = dbh.CreateTables()
+	return dbh, err
+}
+
+//NewDBHandler returns pointer to the default ready to use DBHandler
+func NewDBHandlerWithPath(path string) (*DBHandler, error) {
+	dbh := &DBHandler{
+		DriverName: Driver,
+		DBPath:     path,
+	}
+	err := dbh.Connect()
+	if err != nil {
+		return dbh, err
+	}
+
+	err = dbh.CreateTables()
+	return dbh, err
 }

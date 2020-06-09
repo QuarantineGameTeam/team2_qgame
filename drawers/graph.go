@@ -1,4 +1,4 @@
-package drawing
+package drawers
 
 import (
 	"fmt"
@@ -52,12 +52,18 @@ func drawGrid(context *gg.Context, dimension int) {
 //NOTE 2: these 3 funcs are EXPORTED(will be used in main.go).
 
 //CreatePartViewPhoto draws a part-view map where objects are displayed on players horizon.
-func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCenterY, drawingHorizon int, saveTo string) error {
+func CreatePartViewPhoto(locations []models.Location, players []models.Player, drawingCenterX, drawingCenterY, drawingHorizon int, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
 	drawBackground(context, color.White)
 	horizon := 2*drawingHorizon+1
 	drawGrid(context, horizon)
-	for _, l := range locations {
+
+	objects := locations
+	for i := 0; i < len(players); i++ {
+		objects = append(objects, &players[i])
+	}
+
+	for _, l := range objects {
 		locX, locY := l.GetLocation()
 		f, err := os.Open(l.GetSmallPic())
 		if err != nil {
@@ -65,11 +71,10 @@ func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCen
 		}
 		defer f.Close()
 
-		img, name, err := image.Decode(f)
+		img, _, err := image.Decode(f)
 		if err != nil {
 			log.Fatal(err)
 		}	//finally found a bit confusing but ok way to convert string to image.Image.
-		fmt.Println(name)	//tbh idk where to use string name. Just useless use for that type.
 		crop := resize.Resize(uint(s)/uint(horizon), uint(s)/uint(horizon), img, resize.Lanczos3)
 		if locX >= (drawingCenterX - drawingHorizon) && locX <= (drawingCenterX + drawingHorizon) {
 			if locY >= (drawingCenterY - drawingHorizon) && locY <= (drawingCenterY + drawingHorizon) {
@@ -92,8 +97,6 @@ func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCen
 				} else if locX < drawingCenterX && locY < drawingCenterY {
 					context.DrawImage(crop, 0, 0)
 				}
-
-				
 			}
 		}
 	}
@@ -101,11 +104,17 @@ func CreatePartViewPhoto(locations []models.Location, drawingCenterX, drawingCen
 }
 
 //CreateMapViewPhoto draws a full map but only areas that have been visited will be displayed.
-func CreateMapViewPhoto(locations []models.Location, visited[][]bool, saveTo string) error {
+func CreateMapViewPhoto(locations []models.Location, players []models.Player, visited[][]bool, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
 	drawBackground(context, color.White)
 	drawGrid(context, defaultDimension)
-	for _, l := range(locations) {
+
+	objects := locations
+	for i := 0; i < len(players); i++ {
+		objects = append(objects, &players[i])
+	}
+
+	for _, l := range objects {
 		locX, locY := l.GetLocation()
 		f, err := os.Open(l.GetSmallPic())
 		if err != nil {
@@ -113,11 +122,10 @@ func CreateMapViewPhoto(locations []models.Location, visited[][]bool, saveTo str
 		}
 		defer f.Close()
 
-		img, name, err := image.Decode(f)
+		img, _, err := image.Decode(f)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(name)
 
 		crop := resize.Resize(uint(s)/9, uint(s)/9, img, resize.Lanczos3)
 
@@ -129,11 +137,17 @@ func CreateMapViewPhoto(locations []models.Location, visited[][]bool, saveTo str
 }
 
 //CreateFullViewPhoto draws a full map with all the locations no matter if they are not visible. Only for admins.
-func CreateFullViewPhoto(locations []models.Location, saveTo string) error {
+func CreateFullViewPhoto(locations []models.Location, players []models.Player, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
 	drawBackground(context, color.White)
 	drawGrid(context, defaultDimension)
-	for _, l := range(locations) {
+
+	objects := locations
+	for i := 0; i < len(players); i++ {
+		objects = append(objects, &players[i])
+	}
+
+	for _, l := range objects {
 		locX, locY := l.GetLocation()
 		f, err := os.Open(l.GetSmallPic())
 		if err != nil {
@@ -141,15 +155,15 @@ func CreateFullViewPhoto(locations []models.Location, saveTo string) error {
 		}
 		defer f.Close()
 
-		img, name, err := image.Decode(f)
+		img, _, err := image.Decode(f)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(name)
 
 		crop := resize.Resize(uint(s)/9, uint(s)/9, img, resize.Lanczos3)
 
 		context.DrawImage(crop, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
 	}
+
 	return context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
 }
