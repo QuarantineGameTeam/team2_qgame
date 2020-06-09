@@ -99,20 +99,49 @@ func CreatePartViewPhoto(locations []models.Location, players []models.Player, d
 				}
 			}
 		}
-		if (drawingCenterX + drawingHorizon) >= defaultDimension {
+		if drawingCenterX == defaultDimension {
 			context.DrawRectangle(s*2/3, 0, s*2/3, s)
 			context.SetRGB(255, 0, 0)
 			context.Fill()
-		} else if (drawingCenterY + drawingHorizon) >= defaultDimension {
+		} else if drawingCenterY == defaultDimension {
+			context.DrawRectangle(0, s*2/3, s, s/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if drawingCenterX == 0 {
+			context.DrawRectangle(0, 0, s/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if drawingCenterY == 0 {
+			context.DrawRectangle(0, 0, s, s/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} 
+		if drawingCenterX == defaultDimension && drawingCenterY == defaultDimension {
+			context.DrawRectangle(s*2/3, 0, s*2/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
 			context.DrawRectangle(0, s*2/3, s, s*2/3)
 			context.SetRGB(255, 0, 0)
 			context.Fill()
-		} else if (drawingCenterX - drawingHorizon) <= 0 {
-			context.DrawRectangle(0, 0, s*2/3, s)
+		} else if drawingCenterX == 0 && drawingCenterY == 0 {
+			context.DrawRectangle(0, 0, s/3, s)
 			context.SetRGB(255, 0, 0)
 			context.Fill()
-		} else if (drawingCenterY - drawingHorizon) <= 0 {
-			context.DrawRectangle(0, 0, s, s*2/3)
+			context.DrawRectangle(0, 0, s, s/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if drawingCenterX == defaultDimension && drawingCenterY == 0 {
+			context.DrawRectangle(s*2/3, 0, s*2/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+			context.DrawRectangle(0, 0, s, s/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if drawingCenterX == 0 && drawingCenterY == defaultDimension {
+			context.DrawRectangle(0, 0, s/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+			context.DrawRectangle(0, s*2/3, s, s*2/3)
 			context.SetRGB(255, 0, 0)
 			context.Fill()
 		}
