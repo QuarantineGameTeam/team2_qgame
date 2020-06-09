@@ -99,6 +99,23 @@ func CreatePartViewPhoto(locations []models.Location, players []models.Player, d
 				}
 			}
 		}
+		if (drawingCenterX + drawingHorizon) >= defaultDimension {
+			context.DrawRectangle(s*2/3, 0, s*2/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if (drawingCenterY + drawingHorizon) >= defaultDimension {
+			context.DrawRectangle(0, s*2/3, s, s*2/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if (drawingCenterX - drawingHorizon) <= 0 {
+			context.DrawRectangle(0, 0, s*2/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if (drawingCenterY - drawingHorizon) <= 0 {
+			context.DrawRectangle(0, 0, s, s*2/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		}
 	}
 	return context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
 }
