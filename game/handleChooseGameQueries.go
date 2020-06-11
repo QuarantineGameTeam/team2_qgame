@@ -6,6 +6,7 @@ import (
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/database"
 	"github.com/QuarantineGameTeam/team2_qgame/drawers"
+	"github.com/QuarantineGameTeam/team2_qgame/game_model"
 	"log"
 	"strconv"
 )
@@ -67,6 +68,13 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 		log.Println(err)
 	}
 	err = dbh.Update("games", "players_json", newJSON, "game_id", gm.GameID)
+	if err != nil {
+		log.Println(err)
+	}
+	err = dbh.Update("players", "smallPic", fmt.Sprintf("photos/player-%s.png", data), "player_id", query.FromUser.ID)
+	if err != nil {
+		log.Println(err)
+	}
 
 	_, err = client.SendMessage(api.Message {
 		ChatID: query.FromUser.ID,
@@ -79,9 +87,15 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 
 func SendCurrentPhoto(client *api.Client, user api.User) {
 	gm := getPlayerGame(user)
+	player := getPlayer(user)
+
+	if player == nil {
+		log.Println("this player does not exist")
+		return
+	}
 
 	photoLocation := fmt.Sprintf("temp/%d.png", user.ID)
-	err := drawers.CreateFullViewPhoto(gm.Locations, gm.Players, strconv.Itoa(user.ID))
+	err := drawers.CreatePartViewPhoto(gm.Locations, gm.Players, player.X, player.Y, game_model.Horizon, strconv.Itoa(user.ID))
 	if err != nil {
 		log.Println(err)
 	}

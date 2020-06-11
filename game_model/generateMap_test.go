@@ -1,4 +1,4 @@
-package game
+package game_model
 
 import (
 	"fmt"

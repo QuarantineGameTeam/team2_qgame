@@ -10,7 +10,7 @@ const (
 	SignActive        = true
 
 	//Paths to pictures
-	SmallSignPicPath = ""
+	SmallSignPicPath = "photos/sign.png"
 	BigSignPicPath   = ""
 )
 

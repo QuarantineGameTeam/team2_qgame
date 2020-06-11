@@ -3,20 +3,47 @@ package game
 import (
 	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/drawers"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 	"log"
+	"strconv"
 )
 
 func handleMainGameQueries(client *api.Client, query api.CallBackQuery) {
 	switch query.CallBackData {
 	case "map":
-
+		handleMapQueries(client, query)
 	case "interact":
-
+		// todo
 	case "castle":
-
+		// todo
 	case "up", "down", "left", "right":
 		handleControlsQueries(client, query)
+	}
+}
+
+func handleMapQueries(client *api.Client, query api.CallBackQuery) {
+	// Gonna be working with MapView as soon as visited points are implemented
+
+	_, err := client.SendMessage(api.Message {
+		ChatID: query.FromUser.ID,
+		Text: "This is all you've visited so far!",
+	})
+	if err != nil {
+		log.Println(err)
+	}
+
+	gm := getPlayerGame(query.FromUser)
+
+	photoLocation := fmt.Sprintf("temp/%d.png", query.FromUser.ID)
+	err = drawers.CreateFullViewPhoto(gm.Locations, gm.Players, strconv.Itoa(query.FromUser.ID))
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = client.SendPhoto(query.FromUser.ID, photoLocation)
+	if err != nil {
+		log.Println(err)
 	}
 }
 
@@ -24,16 +51,30 @@ func handleControlsQueries(client *api.Client, query api.CallBackQuery) {
 	player := getPlayer(query.FromUser)
 	game := getPlayerGame(query.FromUser)
 
+	var x, y int // coords of an object to interact with
+
 	if player != nil && game != nil {
 		switch query.CallBackData {
 		case "up":
-			player.Y--
+			x = player.X
+			y = player.Y - 1
 		case "down":
-			player.Y++
+			x = player.X
+			y = player.Y + 1
 		case "left":
-			player.X--
+			x = player.X - 1
+			y = player.Y
 		case "right":
-			player.X++
+			x = player.X + 1
+			y = player.Y
+		}
+
+		for _, l := range game.Locations {
+			haveX, haveY := l.GetLocation()
+			if haveX == x && haveY == y {
+				player.InteractWith(&l)
+				break
+			}
 		}
 	} else {
 		if player == nil {

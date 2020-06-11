@@ -140,4 +140,9 @@ func handleChangeNickNameQuery(client *api.Client, query api.CallBackQuery) {
 	if err != nil {
 		log.Println(err)
 	}
+
+	err = client.DeleteMessage(query.Message)
+	if err != nil {
+		log.Println("Unable to delete message: ", err)
+	}
 }

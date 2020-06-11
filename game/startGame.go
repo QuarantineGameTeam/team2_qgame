@@ -29,6 +29,13 @@ func StartGames(client *api.Client) {
 		}
 
 		if ready {
+			for _, p := range players {
+				_, err = client.SendMessage(api.Message{
+					ChatID: p.PlayerId,
+					Text: "Game is starting. Be ready.",
+				})
+			}
+
 			gm.State = game_model.StateRunning
 			err = dbh.Update("games", "state", gm.State, "game_id", gm.GameID)
 			if err != nil {

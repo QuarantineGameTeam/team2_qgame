@@ -11,7 +11,7 @@ const (
 	CoffeeAddHealth     = 10
 
 	//Paths to pictures
-	SmallCoffeePicPath = ""
+	SmallCoffeePicPath = "photos/coffee_point.png"
 	BigCoffeePicPath   = ""
 )
 

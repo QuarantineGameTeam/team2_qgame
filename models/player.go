@@ -4,7 +4,7 @@ import "github.com/QuarantineGameTeam/team2_qgame/api"
 
 const (
 	//Paths to pictures
-	SmallPlayerPicPath = "photos/enemy.png"
+	SmallPlayerPicPath = "photos/player-red.png"
 	BigPlayerPicPath   = ""
 
 	PlayerActive  = true

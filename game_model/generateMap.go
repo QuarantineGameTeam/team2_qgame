@@ -1,4 +1,4 @@
-package game
+package game_model
 
 import (
 	"fmt"
@@ -51,7 +51,7 @@ func GenerateMap() []models.Location {
 
 //getEmptyMap returns array of EmptyFields
 func getEmptyMap() []models.Location {
-	result := []models.Location{}
+	var result []models.Location
 	for w := 0; w < Width; w++ {
 		for h := 0; h < Height; h++ {
 			result = append(result, models.NewEmptyField(w, h))
@@ -150,6 +150,10 @@ func createSweetHome(matrix *[]models.Location, col int) {
 	//Choose one of possible spawnPoints and generate SweetHome there
 	sweetHomePoint := spawnPoints[random.Intn(len(spawnPoints))]
 	homeName := fmt.Sprintf("Sweet Home-%s", Clans[SweetHomesSet])
-	(*matrix)[sweetHomePoint.Y*Width+sweetHomePoint.X] = &models.SweetHome{ObjectName: homeName}
+	picPath := fmt.Sprintf("photos/castle-%s.png", Clans[SweetHomesSet])
+	(*matrix)[sweetHomePoint.Y*Width+sweetHomePoint.X] = &models.SweetHome{
+		ObjectName: homeName,
+		SmallPic: picPath,
+	}
 	SweetHomesSet++
 }

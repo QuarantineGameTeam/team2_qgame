@@ -13,7 +13,8 @@ const (
 	StateEnded       = iota
 )
 
-const PlayersCount = 3
+const PlayersCount = 2
+const Horizon = 1
 
 type Game struct {
 	GameID int
@@ -33,32 +34,25 @@ type Game struct {
 func NewGame(starter *api.User) (*Game, error) {
 	var err error
 
-	game := new(Game)
-	game.Locations = generateLocations(starter)
+	gm := new(Game)
+	gm.Locations = GenerateMap()
 
-	jsonBytes, err := json.Marshal(game.Locations)
-	game.GameJSON = string(jsonBytes)
-	game.State = StateMatchMaking
-	game.PlayerID = starter.ID
-	game.Players = []models.Player{
+	jsonBytes, err := json.Marshal(gm.Locations)
+	gm.GameJSON = string(jsonBytes)
+	gm.State = StateMatchMaking
+	gm.PlayerID = starter.ID
+	gm.Players = []models.Player{
 		*models.NewPlayer(*starter, 0, 0),
 	}
-	bytePlayers, err := json.Marshal(game.Players)
+	bytePlayers, err := json.Marshal(gm.Players)
 	if err != nil {
 		log.Println(err)
 	}
-	game.PlayersJSON = string(bytePlayers)
+	gm.PlayersJSON = string(bytePlayers)
 
 	if err != nil {
-		log.Println("Error creating the game.\n", err)
+		log.Println("Error creating the gm.\n", err)
 	}
 
-	return game, err
-}
-
-func generateLocations(starter *api.User) []models.Location {
-	return []models.Location{
-		models.NewCandyFactory(3, 4),
-		models.NewChest(3, 6),
-	}
+	return gm, err
 }
