@@ -3,8 +3,10 @@ package handlers
 import (
 	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
+	"github.com/QuarantineGameTeam/team2_qgame/database"
 	"github.com/QuarantineGameTeam/team2_qgame/drawers"
 	"log"
+	"strconv"
 )
 
 var (
@@ -45,21 +47,43 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 		log.Println("Unable to delete message: ", err)
 	}
 
-	photoLocation := "temp/testpic.png"
-	err = drawers.CreateFullViewPhoto(gm.Locations, gm.Players, "testpic")
+	dbh, err := database.NewDBHandler()
 	if err != nil {
 		log.Println(err)
 	}
 
-	err = client.SendPhoto(query.FromUser.ID, photoLocation)
+	err = dbh.Update("players", "clan", data, "telegram_id", query.FromUser.ID)
 	if err != nil {
 		log.Println(err)
 	}
 
-	// WEIRD ASYNC RIGHT NOW
-	// Sending move buttons one by one for players
-	_, err = client.SendMessage(api.Message{
-		ChatID:       query.FromUser.ID,
+	_, err = client.SendMessage(api.Message {
+		ChatID: query.FromUser.ID,
+		Text: "Wait until other users find their clans.",
+	})
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func SendCurrentPhoto(client *api.Client, user api.User) {
+	gm := getPlayerGame(user)
+
+	photoLocation := fmt.Sprintf("temp/%d.png", user.ID)
+	err := drawers.CreateFullViewPhoto(gm.Locations, gm.Players, strconv.Itoa(user.ID))
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = client.SendPhoto(user.ID, photoLocation)
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func SendMoveButtons(client *api.Client, user api.User) {
+	_, err := client.SendMessage(api.Message{
+		ChatID:       user.ID,
 		Text:         "Your turn.",
 		InlineMarkup: mainGameMarkup,
 	})

@@ -100,5 +100,13 @@ func updateDBGame(game *game.Game) {
 	if err != nil {
 		log.Println(err)
 	}
+}
 
+func indexPlayer(players []models.Player, toFind models.Player) int {
+	for i, v := range players {
+		if v.PlayerId == toFind.PlayerId {
+			return i
+		}
+	}
+	return -1
 }

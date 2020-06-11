@@ -3,7 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
-	"github.com/QuarantineGameTeam/team2_qgame/drawers"
+	"github.com/QuarantineGameTeam/team2_qgame/models"
 	"log"
 )
 
@@ -46,35 +46,24 @@ func handleControlsQueries(client *api.Client, query api.CallBackQuery) {
 
 	updateGameAfterMove(game, player)
 
-	// ------------------ //
-	// TEST PURPOSES ONLY //
-	// ------------------ //
+	players := game.Players
+	if player != nil {
+		ind := indexPlayer(players, *player)
+		nextPlayer := models.Player{}
+		if ind == len(players)-1 {
+			nextPlayer = players[0]
+		} else {
+			nextPlayer = players[ind+1]
+		}
 
-	photoLocation := "temp/testpic.png"
-	err := drawers.CreateFullViewPhoto(game.Locations, game.Players, "testpic")
-	if err != nil {
-		log.Println(err)
+		// sending move buttons to next player
+		SendCurrentPhoto(client, api.User{ID: nextPlayer.PlayerId})
+		SendMoveButtons(client, api.User{ID: nextPlayer.PlayerId})
+	} else {
+		fmt.Println("Player is <nil>")
 	}
 
-	err = client.SendPhoto(query.FromUser.ID, photoLocation)
-	if err != nil {
-		log.Println(err)
-	}
-
-	// WEIRD ASYNC RIGHT NOW
-	// Sending move buttons one by one for players
-	_, err = client.SendMessage(api.Message{
-		ChatID:       query.FromUser.ID,
-		Text:         "Your turn.",
-		InlineMarkup: mainGameMarkup,
-	})
-	if err != nil {
-		log.Println(err)
-	}
-
-	// ----------------- //
-
-	err = client.DeleteMessage(query.Message)
+	err := client.DeleteMessage(query.Message)
 	if err != nil {
 		log.Println("Unable to delete message: ", err)
 	}

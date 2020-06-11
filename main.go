@@ -41,7 +41,7 @@ func main() {
 			}
 		}
 
-		game.GameUpdate()
+		game.GameUpdate(client)
 
 		time.Sleep(time.Millisecond * 100)
 	}
