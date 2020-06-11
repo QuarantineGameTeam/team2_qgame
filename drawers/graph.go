@@ -177,6 +177,20 @@ func CreateMapViewPhoto(locations []models.Location, players []models.Player, vi
 
 		if visited[locX][locY] == true {
 			context.DrawImage(crop, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
+		} else {
+			fl, err := os.Open("photos/forest.jpeg")
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer f.Close()
+	
+			imag, _, err := image.Decode(fl)
+			if err != nil {
+				log.Fatal(err)
+			}
+			unexp := resize.Resize(uint(s)/uint(defaultDimension), uint(s)/uint(defaultDimension), imag, resize.Lanczos3)
+			
+			context.DrawImage(unexp, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
 		}
 	}
 	return context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
