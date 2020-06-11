@@ -4,11 +4,11 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/QuarantineGameTeam/team2_qgame/game_model"
 	"github.com/QuarantineGameTeam/team2_qgame/utils"
 	"log"
 
 	"github.com/QuarantineGameTeam/team2_qgame/api"
-	"github.com/QuarantineGameTeam/team2_qgame/game"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 
 	//import sqlite driver
@@ -221,7 +221,7 @@ func (dbh *DBHandler) CreateGamesTable() error {
 }
 
 //InsertGame adds a game to the Games table
-func (dbh *DBHandler) InsertGame(game game.Game) error {
+func (dbh *DBHandler) InsertGame(game game_model.Game) error {
 	bytes, err := json.Marshal(game.Locations)
 	if err != nil {
 		return err
@@ -243,8 +243,8 @@ func (dbh *DBHandler) InsertGame(game game.Game) error {
 }
 
 //GetGameByID returns game.Game object from database with specified id
-func (dbh *DBHandler) GetGameByID(id int) (*game.Game, error) {
-	gm := new(game.Game)
+func (dbh *DBHandler) GetGameByID(id int) (*game_model.Game, error) {
+	gm := new(game_model.Game)
 	result, err := dbh.Connection.Query(`SELECT * FROM games WHERE game_id = ?;`, id)
 	if err != nil {
 		panic(err)
@@ -266,8 +266,8 @@ func (dbh *DBHandler) GetGameByID(id int) (*game.Game, error) {
 }
 
 //GetGames returns array of all current games
-func (dbh *DBHandler) GetGames() []*game.Game {
-	var games []*game.Game
+func (dbh *DBHandler) GetGames() []*game_model.Game {
+	var games []*game_model.Game
 	result, err := dbh.Connection.Query(`SELECT * FROM games;`)
 	if err != nil {
 		log.Println()
@@ -275,7 +275,7 @@ func (dbh *DBHandler) GetGames() []*game.Game {
 
 	if result != nil {
 		for result.Next() {
-			readingGame := new(game.Game)
+			readingGame := new(game_model.Game)
 			err = result.Scan(&readingGame.GameID, &readingGame.GameJSON, &readingGame.PlayerID,
 				&readingGame.StartMoveTime, &readingGame.PlayersJSON, &readingGame.State)
 			if err != nil {

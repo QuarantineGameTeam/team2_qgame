@@ -1,8 +1,8 @@
-package handlers
+package game
 
 import (
 	"github.com/QuarantineGameTeam/team2_qgame/database"
-	"github.com/QuarantineGameTeam/team2_qgame/game"
+	"github.com/QuarantineGameTeam/team2_qgame/game_model"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 	"reflect"
 	"testing"
@@ -10,11 +10,11 @@ import (
 
 func Test_updateGameAfterMove(t *testing.T) {
 	type have struct {
-		game   *game.Game
+		game   *game_model.Game
 		player *models.Player
 	}
 	type want struct {
-		game *game.Game
+		game *game_model.Game
 	}
 	tests := []struct {
 		name string
@@ -24,7 +24,7 @@ func Test_updateGameAfterMove(t *testing.T) {
 		{
 			"Ok test",
 			have{
-				&game.Game{
+				&game_model.Game{
 					GameID: 0,
 					Locations: []models.Location{
 						&models.CandyFactory{
@@ -51,7 +51,7 @@ func Test_updateGameAfterMove(t *testing.T) {
 				},
 			},
 			want{
-				&game.Game{
+				&game_model.Game{
 					GameID: 0,
 					Locations: []models.Location{
 						&models.CandyFactory{

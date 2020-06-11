@@ -1,4 +1,4 @@
-package game
+package game_model
 
 import (
 	"encoding/json"
@@ -13,7 +13,7 @@ const (
 	StateEnded       = iota
 )
 
-const PlayersCount = 2
+const PlayersCount = 3
 
 type Game struct {
 	GameID int

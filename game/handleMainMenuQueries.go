@@ -1,11 +1,11 @@
-package handlers
+package game
 
 import (
 	"encoding/json"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/config"
 	"github.com/QuarantineGameTeam/team2_qgame/database"
-	"github.com/QuarantineGameTeam/team2_qgame/game"
+	"github.com/QuarantineGameTeam/team2_qgame/game_model"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 	"log"
 )
@@ -35,6 +35,15 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 		log.Println("Failed to connect to database.\n", err)
 	}
 
+	game := getPlayerGame(query.FromUser)
+	if game != nil {
+		err = client.AnswerCallBackQuery(query, "You are already in a game! GRRR.", true)
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
 	err = client.AnswerCallBackQuery(query, "Wait until we find a game for you.", true)
 	if err != nil {
 		log.Println(err)
@@ -44,7 +53,7 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 
 	if len(games) == 0 {
 		// Creating new game if there are no games at all
-		gm, err := game.NewGame(&query.FromUser)
+		gm, err := game_model.NewGame(&query.FromUser)
 		if err != nil {
 			log.Println(err)
 		}
@@ -63,7 +72,7 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 		// else joining the game which is in Matchmaking state
 		joined := false
 		for _, gm := range games {
-			if gm.State == game.StateMatchMaking {
+			if gm.State == game_model.StateMatchMaking {
 				// adding players to 0x0 location to move after further clan choosing
 				p := models.NewPlayer(query.FromUser, 1, 0)
 				err = dbh.InsertPlayer(*p)
@@ -83,8 +92,8 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 					log.Println("Unable to update table games: ", err)
 				}
 
-				if len(gm.Players) >= game.PlayersCount {
-					gm.State = game.StateRunning
+				if len(gm.Players) >= game_model.PlayersCount {
+					gm.State = game_model.StateRunning
 					sendChooseClanMarkup(client, gm)
 				}
 				joined = true
@@ -93,7 +102,7 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 		}
 		if !joined {
 			// Creating new game if there are no opened games
-			gm, err := game.NewGame(&query.FromUser)
+			gm, err := game_model.NewGame(&query.FromUser)
 			if err != nil {
 				log.Println(err)
 			}

@@ -1,4 +1,4 @@
-package handlers
+package game
 
 import (
 	"fmt"
@@ -56,6 +56,8 @@ func handleControlsQueries(client *api.Client, query api.CallBackQuery) {
 			nextPlayer = players[ind+1]
 		}
 
+		// sending update to the user, who did the move
+		SendCurrentPhoto(client, query.FromUser)
 		// sending move buttons to next player
 		SendCurrentPhoto(client, api.User{ID: nextPlayer.PlayerId})
 		SendMoveButtons(client, api.User{ID: nextPlayer.PlayerId})

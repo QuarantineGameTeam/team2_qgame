@@ -1,12 +1,12 @@
-package handlers
+package game
 
 import (
 	"github.com/QuarantineGameTeam/team2_qgame/api"
-	"github.com/QuarantineGameTeam/team2_qgame/game"
+	"github.com/QuarantineGameTeam/team2_qgame/game_model"
 	"log"
 )
 
-func sendChooseClanMarkup(client *api.Client, gm *game.Game) {
+func sendChooseClanMarkup(client *api.Client, gm *game_model.Game) {
 	for _, p := range gm.Players {
 		_, err := client.SendMessage(api.Message {
 			ChatID: p.PlayerId,

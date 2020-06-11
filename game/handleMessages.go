@@ -1,4 +1,4 @@
-package handlers
+package game
 
 import (
 	"fmt"
@@ -83,8 +83,8 @@ func handleChangeNickNameMessage(client *api.Client, message api.UpdateMessage) 
 
 	_, err = client.SendMessage(
 		api.Message{
-			ChatID: message.FromUser.ID,
-			Text:   msg,
+			ChatID:       message.FromUser.ID,
+			Text:         msg,
 			InlineMarkup: startMarkup,
 		})
 }

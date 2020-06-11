@@ -1,10 +1,10 @@
-package handlers
+package game
 
 import (
 	"encoding/json"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/database"
-	"github.com/QuarantineGameTeam/team2_qgame/game"
+	"github.com/QuarantineGameTeam/team2_qgame/game_model"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 	"log"
 )
@@ -34,7 +34,7 @@ func getPlayer(user api.User) *models.Player {
 	return player
 }
 
-func getPlayerGame(user api.User) *game.Game {
+func getPlayerGame(user api.User) *game_model.Game {
 	dbh, err := database.NewDBHandler()
 	if err != nil {
 		log.Println(err)
@@ -52,7 +52,7 @@ func getPlayerGame(user api.User) *game.Game {
 	return nil
 }
 
-func updateGameAfterMove(game *game.Game, player *models.Player) {
+func updateGameAfterMove(game *game_model.Game, player *models.Player) {
 	players := game.Players
 	for i, p := range players {
 		if p.PlayerId == player.PlayerId {
@@ -86,7 +86,7 @@ func updateDBPlayer(player *models.Player) {
 	}
 }
 
-func updateDBGame(game *game.Game) {
+func updateDBGame(game *game_model.Game) {
 	// writing changes to database
 	dbh, err := database.NewDBHandler()
 	if err != nil {

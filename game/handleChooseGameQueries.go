@@ -1,6 +1,7 @@
-package handlers
+package game
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/database"
@@ -40,7 +41,7 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 	gm := getPlayerGame(query.FromUser)
 
 	// Positioning them near the castles
-	gm.LocatePlayers()
+	LocatePlayers(gm)
 
 	err = client.DeleteMessage(query.Message)
 	if err != nil {
@@ -52,10 +53,20 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 		log.Println(err)
 	}
 
-	err = dbh.Update("players", "clan", data, "telegram_id", query.FromUser.ID)
+	player := getPlayer(query.FromUser)
+	ind := indexPlayer(gm.Players, *player)
+	player.Clan = data
+	gm.Players[ind] = *player
+
+	newJSON, err := json.Marshal(gm.Players)
 	if err != nil {
 		log.Println(err)
 	}
+	err = dbh.Update("players", "clan", data, "player_id", query.FromUser.ID)
+	if err != nil {
+		log.Println(err)
+	}
+	err = dbh.Update("games", "players_json", newJSON, "game_id", gm.GameID)
 
 	_, err = client.SendMessage(api.Message {
 		ChatID: query.FromUser.ID,

@@ -4,7 +4,6 @@ import (
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/config"
 	"github.com/QuarantineGameTeam/team2_qgame/game"
-	"github.com/QuarantineGameTeam/team2_qgame/handlers"
 	"log"
 	"time"
 )
@@ -37,7 +36,7 @@ func main() {
 
 			if update.UpdateID != 0 {
 				// run handlers asynchronously
-				go handlers.HandleUpdate(client, update)
+				go game.HandleUpdate(client, update)
 			}
 		}
 
