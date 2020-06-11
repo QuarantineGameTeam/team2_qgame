@@ -61,6 +61,7 @@ func (dbh *DBHandler) CreatePlayersTable() error {
 					message TEXT,
 					x INTEGER,
 					y INTEGER,
+					clan TEXT,
 					smallPic TEXT,
 					bigPic TEXT,
 					active INTEGER,
@@ -91,8 +92,8 @@ func (dbh *DBHandler) InsertPlayer(player models.Player) error {
 	if player.Active {
 		active = 1
 	}
-	_, err := dbh.Connection.Exec(`INSERT INTO players (player_id, nickname, message, x, y, smallPic, bigPic, active, health, dexterity, mastery, damage, speed, visibility, candies, cakes, gold) 
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`, player.PlayerId, player.ObjectName, player.Message, player.X, player.Y, player.SmallPic, player.BigPic, active, player.Health,
+	_, err := dbh.Connection.Exec(`INSERT INTO players (player_id, nickname, message, x, y, clan, smallPic, bigPic, active, health, dexterity, mastery, damage, speed, visibility, candies, cakes, gold) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`, player.PlayerId, player.ObjectName, player.Message, player.X, player.Y, player.Clan, player.SmallPic, player.BigPic, active, player.Health,
 		player.Dexterity, player.Mastery, player.Damage, player.Speed, player.Visibility, player.ScoreCandy, player.ScoreCake, player.ScoreGold)
 
 	return err
@@ -230,7 +231,7 @@ func (dbh *DBHandler) GetPlayerByID(id int) (*models.Player, error) {
 	defer result.Close()
 	if result.Next() {
 		var active int = 1
-		err := result.Scan(&player.PlayerId, &player.ObjectName, &player.Message, &player.X, &player.Y, &player.SmallPic, &player.BigPic, &active, &player.Health,
+		err := result.Scan(&player.PlayerId, &player.ObjectName, &player.Message, &player.X, &player.Y, &player.Clan, &player.SmallPic, &player.BigPic, &active, &player.Health,
 			&player.Dexterity, &player.Mastery, &player.Damage, &player.Speed, &player.Visibility, &player.ScoreCandy, &player.ScoreCake, &player.ScoreGold)
 		if active == 0 {
 			player.Active = false
@@ -242,7 +243,6 @@ func (dbh *DBHandler) GetPlayerByID(id int) (*models.Player, error) {
 	return player, err
 }
 
-
 //GetGames returns array of all current games
 func (dbh *DBHandler) GetGames() []*game.Game {
 	var games []*game.Game
@@ -250,11 +250,11 @@ func (dbh *DBHandler) GetGames() []*game.Game {
 	if err != nil {
 		log.Println()
 	}
-	
+
 	if result != nil {
 		for result.Next() {
 			readingGame := new(game.Game)
-			err = result.Scan(&readingGame.GameID, &readingGame.GameJSON, &readingGame.PlayerID, 
+			err = result.Scan(&readingGame.GameID, &readingGame.GameJSON, &readingGame.PlayerID,
 				&readingGame.StartMoveTime, &readingGame.Players, &readingGame.State)
 			if err != nil {
 				log.Println(err)
