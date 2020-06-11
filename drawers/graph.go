@@ -54,7 +54,7 @@ func drawGrid(context *gg.Context, dimension int) {
 //CreatePartViewPhoto draws a part-view map where objects are displayed on players horizon.
 func CreatePartViewPhoto(locations []models.Location, players []models.Player, drawingCenterX, drawingCenterY, drawingHorizon int, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
-	drawBackground(context, color.White)
+	drawBackground(context, color.RGBA{R: 219, G: 255, B: 204, A: 255})
 	horizon := 2*drawingHorizon+1
 	drawGrid(context, horizon)
 
@@ -99,6 +99,52 @@ func CreatePartViewPhoto(locations []models.Location, players []models.Player, d
 				}
 			}
 		}
+		if drawingCenterX == defaultDimension {
+			context.DrawRectangle(s*2/3, 0, s*2/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if drawingCenterY == defaultDimension {
+			context.DrawRectangle(0, s*2/3, s, s/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if drawingCenterX == 0 {
+			context.DrawRectangle(0, 0, s/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if drawingCenterY == 0 {
+			context.DrawRectangle(0, 0, s, s/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} 
+		if drawingCenterX == defaultDimension && drawingCenterY == defaultDimension {
+			context.DrawRectangle(s*2/3, 0, s*2/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+			context.DrawRectangle(0, s*2/3, s, s*2/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if drawingCenterX == 0 && drawingCenterY == 0 {
+			context.DrawRectangle(0, 0, s/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+			context.DrawRectangle(0, 0, s, s/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if drawingCenterX == defaultDimension && drawingCenterY == 0 {
+			context.DrawRectangle(s*2/3, 0, s*2/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+			context.DrawRectangle(0, 0, s, s/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		} else if drawingCenterX == 0 && drawingCenterY == defaultDimension {
+			context.DrawRectangle(0, 0, s/3, s)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+			context.DrawRectangle(0, s*2/3, s, s*2/3)
+			context.SetRGB(255, 0, 0)
+			context.Fill()
+		}
 	}
 	return context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
 }
@@ -106,9 +152,8 @@ func CreatePartViewPhoto(locations []models.Location, players []models.Player, d
 //CreateMapViewPhoto draws a full map but only areas that have been visited will be displayed.
 func CreateMapViewPhoto(locations []models.Location, players []models.Player, visited[][]bool, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
-	drawBackground(context, color.White)
+	drawBackground(context, color.RGBA{R: 219, G: 255, B: 204, A: 255})
 	drawGrid(context, defaultDimension)
-
 	objects := locations
 	for i := 0; i < len(players); i++ {
 		objects = append(objects, &players[i])
@@ -131,6 +176,20 @@ func CreateMapViewPhoto(locations []models.Location, players []models.Player, vi
 
 		if visited[locX][locY] == true {
 			context.DrawImage(crop, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
+		} else {
+			fl, err := os.Open("photos/forest.jpeg")
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer f.Close()
+	
+			imag, _, err := image.Decode(fl)
+			if err != nil {
+				log.Fatal(err)
+			}
+			unexp := resize.Resize(uint(s)/uint(defaultDimension), uint(s)/uint(defaultDimension), imag, resize.Lanczos3)
+			
+			context.DrawImage(unexp, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
 		}
 	}
 	return context.SavePNG(fmt.Sprintf("temp/%s.png", saveTo))
@@ -139,7 +198,7 @@ func CreateMapViewPhoto(locations []models.Location, players []models.Player, vi
 //CreateFullViewPhoto draws a full map with all the locations no matter if they are not visible. Only for admins.
 func CreateFullViewPhoto(locations []models.Location, players []models.Player, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
-	drawBackground(context, color.White)
+	drawBackground(context, color.RGBA{R: 219, G: 255, B: 204, A: 255})
 	drawGrid(context, defaultDimension)
 
 	objects := locations
