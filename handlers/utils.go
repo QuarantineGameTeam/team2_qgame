@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/database"
 	"github.com/QuarantineGameTeam/team2_qgame/game"
@@ -54,8 +53,6 @@ func getPlayerGame(user api.User) *game.Game {
 }
 
 func updateGameAfterMove(game *game.Game, player *models.Player) {
-	fmt.Printf("Game before an update: %v", *game)
-
 	players := game.Players
 	for i, p := range players {
 		if p.PlayerId == player.PlayerId {
@@ -71,8 +68,6 @@ func updateGameAfterMove(game *game.Game, player *models.Player) {
 
 	updateDBGame(game)
 	updateDBPlayer(player)
-
-	fmt.Printf("Game after an update: %v", *game)
 }
 
 func updateDBPlayer(player *models.Player) {

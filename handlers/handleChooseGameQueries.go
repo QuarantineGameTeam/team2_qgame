@@ -37,8 +37,6 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 	// Go for determining player's game
 	gm := getPlayerGame(query.FromUser)
 
-	fmt.Print(gm)
-
 	// Positioning them near the castles
 	gm.LocatePlayers()
 

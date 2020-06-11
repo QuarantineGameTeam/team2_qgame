@@ -50,8 +50,6 @@ func handleControlsQueries(client *api.Client, query api.CallBackQuery) {
 	// TEST PURPOSES ONLY //
 	// ------------------ //
 
-	fmt.Printf("About to send another pic to %v, game %v\n", query.FromUser, game)
-
 	photoLocation := "temp/testpic.png"
 	err := drawers.CreateFullViewPhoto(game.Locations, game.Players, "testpic")
 	if err != nil {
