@@ -4,9 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log"
+
 	"github.com/QuarantineGameTeam/team2_qgame/game_model"
 	"github.com/QuarantineGameTeam/team2_qgame/utils"
-	"log"
 
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
@@ -216,6 +217,9 @@ func (dbh *DBHandler) CreateGamesTable() error {
 					player_id INTEGER,
 					startmove_time INTEGER,
 					players_json TEXT,
+					red_spawn INTEGER,
+					green_spawn INTEGER,
+					blue_spawn INTEGER,
 					state INTEGER);`)
 	return err
 }
@@ -235,9 +239,9 @@ func (dbh *DBHandler) InsertGame(game game_model.Game) error {
 	game.PlayersJSON = string(bytes)
 
 	//Player structure is described in the models package file player.go
-	_, err = dbh.Connection.Exec(`INSERT INTO games (game_json, player_id, startmove_time, players_json, state) 
-									VALUES (?, ?, ?, ?, ?);`,
-		game.GameJSON, game.PlayerID, game.StartMoveTime, game.PlayersJSON, game.State)
+	_, err = dbh.Connection.Exec(`INSERT INTO games (game_json, player_id, startmove_time, players_json, red_spawn, green_spawn, blue_spawn, state) 
+									VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
+		game.GameJSON, game.PlayerID, game.StartMoveTime, game.PlayersJSON, game.RedSpawn, game.GreenSpawn, game.BlueSpawn, game.State)
 
 	return err
 }
@@ -251,7 +255,8 @@ func (dbh *DBHandler) GetGameByID(id int) (*game_model.Game, error) {
 	}
 	defer result.Close()
 	if result.Next() {
-		err := result.Scan(&gm.GameID, &gm.GameJSON, &gm.PlayerID, &gm.StartMoveTime, &gm.PlayersJSON, &gm.State)
+		err := result.Scan(&gm.GameID, &gm.GameJSON, &gm.PlayerID, &gm.StartMoveTime, &gm.PlayersJSON, &gm.RedSpawn,
+			&gm.GreenSpawn, &gm.BlueSpawn, &gm.State)
 		err = json.Unmarshal([]byte(gm.GameJSON), &gm.Locations)
 		if err != nil {
 			log.Println(err)
@@ -277,7 +282,8 @@ func (dbh *DBHandler) GetGames() []*game_model.Game {
 		for result.Next() {
 			readingGame := new(game_model.Game)
 			err = result.Scan(&readingGame.GameID, &readingGame.GameJSON, &readingGame.PlayerID,
-				&readingGame.StartMoveTime, &readingGame.PlayersJSON, &readingGame.State)
+				&readingGame.StartMoveTime, &readingGame.PlayersJSON, &readingGame.RedSpawn,
+				&readingGame.GreenSpawn, &readingGame.BlueSpawn, &readingGame.State)
 			if err != nil {
 				log.Println(err)
 			}

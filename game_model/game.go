@@ -2,9 +2,10 @@ package game_model
 
 import (
 	"encoding/json"
+	"log"
+
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
-	"log"
 )
 
 const (
@@ -26,6 +27,10 @@ type Game struct {
 
 	Players     []models.Player
 	PlayersJSON string //for identifying a free place to add new gamer in current game
+
+	RedSpawn   int
+	GreenSpawn int
+	BlueSpawn  int
 
 	State int //for game status
 }
