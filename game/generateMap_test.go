@@ -8,51 +8,64 @@ import (
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 )
 
-var MO = 0
-var KF = 0
-var NF = 0
-var CH = 0
-var SI = 0
-var SH = 0
-var BL = 0
-var CP = 0
-
 func TestMap_GenerateMap(t *testing.T) {
-	//this test prints generated map by text
-	test := GenerateMap()
-	for j := 0; j < 9; j++ {
-		for i := 0; i < 9; i++ {
-			fmt.Print(ObjectString(reflect.TypeOf(test[j*9+i])))
-			if i != 8 {
-				fmt.Print(" | ")
+
+	columns := Width / ColumnWidth
+
+	testname := fmt.Sprintf("Generate new map")
+	t.Run(testname, func(t *testing.T) {
+		test := GenerateMap()
+
+		EF := 0
+		KF := 0
+		NF := 0
+		CH := 0
+		SI := 0
+		MO := 0
+		SH := 0
+		CP := 0
+		BL := 0
+		OB := 0
+
+		for i := 0; i < len(test); i++ {
+			switch reflect.TypeOf(test[i]) {
+			case reflect.TypeOf(&models.EmptyField{}):
+				EF++
+				break
+			case reflect.TypeOf(&models.CakeFactory{}):
+				KF++
+				break
+			case reflect.TypeOf(&models.CandyFactory{}):
+				NF++
+				break
+			case reflect.TypeOf(&models.Chest{}):
+				CH++
+				break
+			case reflect.TypeOf(&models.Sign{}):
+				SI++
+				break
+			case reflect.TypeOf(&models.Monster{}):
+				MO++
+				break
+			case reflect.TypeOf(&models.SweetHome{}):
+				SH++
+				break
+			case reflect.TypeOf(&models.CoffeePoint{}):
+				CP++
+				break
+			case reflect.TypeOf(&models.Block{}):
+				BL++
+				break
+			default:
+				OB++
+				break
 			}
 		}
-		fmt.Println()
-	}
-	fmt.Println()
-}
-
-func ObjectString(typ reflect.Type) string {
-	switch typ {
-	case reflect.TypeOf(&models.EmptyField{}):
-		return "EF"
-	case reflect.TypeOf(&models.CakeFactory{}):
-		return "KF"
-	case reflect.TypeOf(&models.CandyFactory{}):
-		return "NF"
-	case reflect.TypeOf(&models.Chest{}):
-		return "CH"
-	case reflect.TypeOf(&models.Sign{}):
-		return "SI"
-	case reflect.TypeOf(&models.Monster{}):
-		return "MO"
-	case reflect.TypeOf(&models.SweetHome{}):
-		return "SH"
-	case reflect.TypeOf(&models.CoffeePoint{}):
-		return "CP"
-	case reflect.TypeOf(&models.Block{}):
-		return "BL"
-	default:
-		return "OB"
-	}
+		if len(test) != Width*Height || KF != CakeFactories*columns || NF != CandyFactories*columns || CH != Chests*columns ||
+			SI != Signs*columns || MO != Monsters*columns || SH != SweetHomes*columns ||
+			CP != CoffeePoints*columns || BL != Blocks*columns || OB > 0 ||
+			EF != len(test)-KF-NF-CH-SI-MO-SH-CP-BL {
+			t.Errorf("amount of objects is incorrect")
+		}
+	})
 }
