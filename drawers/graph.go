@@ -54,7 +54,7 @@ func drawGrid(context *gg.Context, dimension int) {
 //CreatePartViewPhoto draws a part-view map where objects are displayed on players horizon.
 func CreatePartViewPhoto(locations []models.Location, players []models.Player, drawingCenterX, drawingCenterY, drawingHorizon int, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
-	drawBackground(context, color.White)
+	drawBackground(context, color.RGBA{R: 219, G: 255, B: 204, A: 255})
 	horizon := 2*drawingHorizon+1
 	drawGrid(context, horizon)
 
@@ -152,9 +152,8 @@ func CreatePartViewPhoto(locations []models.Location, players []models.Player, d
 //CreateMapViewPhoto draws a full map but only areas that have been visited will be displayed.
 func CreateMapViewPhoto(locations []models.Location, players []models.Player, visited[][]bool, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
-	drawBackground(context, color.White)
+	drawBackground(context, color.RGBA{R: 219, G: 255, B: 204, A: 255})
 	drawGrid(context, defaultDimension)
-
 	objects := locations
 	for i := 0; i < len(players); i++ {
 		objects = append(objects, &players[i])
@@ -199,7 +198,7 @@ func CreateMapViewPhoto(locations []models.Location, players []models.Player, vi
 //CreateFullViewPhoto draws a full map with all the locations no matter if they are not visible. Only for admins.
 func CreateFullViewPhoto(locations []models.Location, players []models.Player, saveTo string) error {
 	context := gg.NewContext(windowConfig, windowConfig)
-	drawBackground(context, color.White)
+	drawBackground(context, color.RGBA{R: 219, G: 255, B: 204, A: 255})
 	drawGrid(context, defaultDimension)
 
 	objects := locations
