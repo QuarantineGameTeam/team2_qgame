@@ -71,6 +71,18 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 
 	player := getPlayer(query.FromUser)
 	ind := indexPlayer(gm.Players, *player)
+
+	if ind == -1 {
+		_, err = client.SendMessage(api.Message{
+			ChatID: query.FromUser.ID,
+			Text: "You are not found in game.",
+		})
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
 	player.Clan = data
 	gm.Players[ind] = *player
 	gm.Players[ind].SmallPic = fmt.Sprintf("photos/player-%s.png", data)
