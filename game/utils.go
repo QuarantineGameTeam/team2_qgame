@@ -6,7 +6,9 @@ import (
 	"github.com/QuarantineGameTeam/team2_qgame/database"
 	"github.com/QuarantineGameTeam/team2_qgame/game_model"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
+	"io/ioutil"
 	"log"
+	"os"
 )
 
 func fitsState(user api.User, state int) bool {
@@ -109,4 +111,24 @@ func indexPlayer(players []models.Player, toFind models.Player) int {
 		}
 	}
 	return -1
+}
+
+func getMessage(command string, code string) string {
+	results := map[string]map[string]string{}
+	
+	f, err := os.Open("config/commands.json")
+	if err != nil {
+		log.Println(err)
+	}
+	bytes, err := ioutil.ReadAll(f)
+	if err != nil {
+		log.Println(err)
+	}
+	
+	err = json.Unmarshal(bytes, &results)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return results[command][code]
 }

@@ -13,6 +13,10 @@ func handleUpdateMessage(client *api.Client, update api.Update) {
 
 	if message.Text == "/start" {
 		handleStartMessage(client, message)
+	} else if message.Text == "/help" {
+		handleHelpMessage(client, message)
+	} else if message.Text == "/rules" {
+		handleRulesMessage(client, message)
 	} else if fitsState(message.FromUser, config.StateChangingName) {
 		handleChangeNickNameMessage(client, message)
 	}
@@ -49,6 +53,28 @@ func handleStartMessage(client *api.Client, message api.UpdateMessage) {
 		}
 	}
 
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func handleHelpMessage(client *api.Client, message api.UpdateMessage) {
+	handleHelpAndRules(client, message)
+}
+
+func handleRulesMessage(client *api.Client, message api.UpdateMessage) {
+	handleHelpAndRules(client, message)
+}
+
+func handleHelpAndRules(client *api.Client, message api.UpdateMessage){
+	// todo refer to user lang code in next releases
+	langCode := "en"
+	msg := getMessage(message.Text, langCode)
+
+	_, err := client.SendMessage(api.Message {
+		ChatID: message.FromUser.ID,
+		Text: msg,
+	})
 	if err != nil {
 		log.Println(err)
 	}
