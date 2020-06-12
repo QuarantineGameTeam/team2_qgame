@@ -1,20 +1,27 @@
-package game
+package game_model
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
 
+	"github.com/QuarantineGameTeam/team2_qgame/api"
+
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 )
 
 func TestMap_GenerateMap(t *testing.T) {
+	user := api.User{ID: 12345, Username: "Player1"}
+	game, err := NewGame(&user)
+	if err != nil {
+		t.Errorf("got error %v", err)
+	}
 
 	columns := Width / ColumnWidth
 
 	testname := fmt.Sprintf("Generate new map")
 	t.Run(testname, func(t *testing.T) {
-		test := GenerateMap()
+		GenerateMap(game)
 
 		EF := 0
 		KF := 0
@@ -27,8 +34,8 @@ func TestMap_GenerateMap(t *testing.T) {
 		BL := 0
 		OB := 0
 
-		for i := 0; i < len(test); i++ {
-			switch reflect.TypeOf(test[i]) {
+		for i := 0; i < len(game.Locations); i++ {
+			switch reflect.TypeOf(game.Locations[i]) {
 			case reflect.TypeOf(&models.EmptyField{}):
 				EF++
 				break
@@ -48,6 +55,8 @@ func TestMap_GenerateMap(t *testing.T) {
 				MO++
 				break
 			case reflect.TypeOf(&models.SweetHome{}):
+				x, y := game.Locations[i].GetLocation()
+				fmt.Printf("Home x=%d, y=%d \n", x, y)
 				SH++
 				break
 			case reflect.TypeOf(&models.CoffeePoint{}):
@@ -61,10 +70,22 @@ func TestMap_GenerateMap(t *testing.T) {
 				break
 			}
 		}
-		if len(test) != Width*Height || KF != CakeFactories*columns || NF != CandyFactories*columns || CH != Chests*columns ||
+
+		game.Players = []models.Player{
+			{Clan: "red"},
+			{Clan: "green"},
+			{Clan: "blue"},
+		}
+
+		LocatePlayers(game)
+		for player := 0; player < len(game.Players); player++ {
+			fmt.Printf("%s x=%d, y=%d \n", game.Players[player].Clan, game.Players[player].X, game.Players[player].Y)
+		}
+
+		if len(game.Locations) != Width*Height || KF != CakeFactories*columns || NF != CandyFactories*columns || CH != Chests*columns ||
 			SI != Signs*columns || MO != Monsters*columns || SH != SweetHomes*columns ||
 			CP != CoffeePoints*columns || BL != Blocks*columns || OB > 0 ||
-			EF != len(test)-KF-NF-CH-SI-MO-SH-CP-BL {
+			EF != len(game.Locations)-KF-NF-CH-SI-MO-SH-CP-BL {
 			t.Errorf("amount of objects is incorrect")
 		}
 	})

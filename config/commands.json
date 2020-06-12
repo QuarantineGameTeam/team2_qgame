@@ -1,0 +1,13 @@
+{
+  "/help" : {
+    "en" : "This bot is designed to play CandyWarGO, a tactical RPG for three players, where the goal is to defeat one of the opponents by making an alliance with another one in order to take over the resources and share them.\nAnd in this game, the resources are candies!\nFor more information, press /rules.",
+    "ru" : "",
+    "uk" : ""
+  },
+
+  "/rules" : {
+    "en" : "Welcome to CandyWarGO!\nTo start the game, choose the clan you would like to join. If the clan you have chosen is already full, you can make an alliance with it during the game while playing for another clan.\nYou have a hero and a castle which provides your hero with supplies and enables you to develop their skills.\nAll the three players make their moves in turn. During the turn your hero can move left, right, up and down to any free square. Otherwise, you can use your move to develop your hero’s skills.\nOn the map, a hero may encounter some randomly situated objects, such as:\n- chests — one-time increase of the hero’s skills;\n- candy factories and candy mines — once taken over, they provide your hero with additional supplies;\n- natural obstacles, such as swamps — with some probability, your hero can overcome them, otherwise you’ll just lose your move.\nEach one of interactions with these objects takes a move.\nHaving encountered a rival hero, you can try either to make alliance with them or to fight them.\nIf your hero is lost, you can hire another one in the castle, which takes a move.\nIf your hero and your castle are both lost, it means your defeat.\nYou win if you and your ally have defeated the enemy hero and their castle. If you happen to be the one who have no ally, you need to defeat both your enemies and their castles, which is quite hard.\nSo, in order to win, be cooperative.\nGood luck!\n",
+    "ru" : "",
+    "uk" : ""
+  }
+}

@@ -4,7 +4,7 @@ import "github.com/QuarantineGameTeam/team2_qgame/api"
 
 const (
 	//Paths to pictures
-	SmallPlayerPicPath = ""
+	SmallPlayerPicPath = "photos/player-red.png"
 	BigPlayerPicPath   = ""
 
 	PlayerActive  = true
@@ -75,7 +75,7 @@ func (p *Player) GetLocation() (int, int) {
 	return p.X, p.Y
 }
 
-func (p *Player) Interact(player *Player) {
+func (p *Player) Interact(*Player){
 	// ...
 }
 

@@ -7,7 +7,7 @@ const (
 	EmptyOccupiedField = false
 
 	//Paths to pictures
-	SmallEmptyPicPath = ""
+	SmallEmptyPicPath = "photos/empty_field.png"
 	BigEmptyPicPath   = ""
 )
 

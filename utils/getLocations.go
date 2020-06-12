@@ -10,7 +10,7 @@ import (
 
 //GetLocations returns array of pointers to models.Location from json string
 func GetLocations(GotJSON string) ([]models.Location, error) {
-	result := []models.Location{}
+	var result []models.Location
 	var got []map[string]interface{}
 	err := json.Unmarshal([]byte(GotJSON), &got)
 	if err != nil {

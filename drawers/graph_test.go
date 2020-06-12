@@ -1,7 +1,6 @@
-package drawing
+package drawers
 
 import (
-	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 	"math/rand"
@@ -155,9 +154,8 @@ func Test_CreateMapViewPhoto(t *testing.T) {
 		}
 	}
 
-	fmt.Println(visited)
-
 	err := CreateMapViewPhoto(locations, players, visited, "test_map_view")
+
 	if err != nil {
 		t.Errorf("Expected nil error, got %v", err)
 	}

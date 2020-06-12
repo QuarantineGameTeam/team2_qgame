@@ -1,4 +1,4 @@
-package game
+package game_model
 
 import (
 	"fmt"
@@ -32,21 +32,19 @@ var Clans []string = []string{"red", "green", "blue"}
 var SweetHomesSet int = 0
 
 //GenerateMap returns array of models.Location with objects needed
-func GenerateMap() []models.Location {
-	result := getEmptyMap()
+func GenerateMap(game *Game) {
+	game.Locations = getEmptyMap()
 
-	setObjects(&result, "CakeFactory", CakeFactories)
-	setObjects(&result, "CandyFactory", CandyFactories)
-	setObjects(&result, "Chest", Chests)
-	setObjects(&result, "CoffeePoint", CoffeePoints)
-	setObjects(&result, "Sign", Signs)
-	setObjects(&result, "Block", Blocks)
-	setObjects(&result, "Monster", Monsters)
+	setObjects(&game.Locations, "CakeFactory", CakeFactories)
+	setObjects(&game.Locations, "CandyFactory", CandyFactories)
+	setObjects(&game.Locations, "Chest", Chests)
+	setObjects(&game.Locations, "CoffeePoint", CoffeePoints)
+	setObjects(&game.Locations, "Sign", Signs)
+	setObjects(&game.Locations, "Block", Blocks)
+	setObjects(&game.Locations, "Monster", Monsters)
 	for column := 0; column < Width/ColumnWidth; column++ {
-		createSweetHome(&result, column)
+		createSweetHome(game, column)
 	}
-
-	return result
 }
 
 //getEmptyMap returns array of EmptyFields
@@ -115,11 +113,13 @@ func addPoints(point1, point2 Point) Point {
 	return Point{point1.X + point2.X, point1.Y + point2.Y}
 }
 
-func createSweetHome(matrix *[]models.Location, col int) {
+func createSweetHome(game *Game, col int) {
+	matrix := &game.Locations
 	seed := rand.NewSource(time.Now().UnixNano()) //setting time as a seed for random
 	random := rand.New(seed)                      //setting seed
 
-	var spawnPoints []Point
+	var homeSpawnPoints []Point
+	var playerSpawnPoints []Point
 
 	//Fill spawnPoints with coordinates, which has two emptyField in a row to go from
 	var delta []Point = []Point{{-1, 0}, {1, 0}, {0, 1}, {0, -1}} //adding this points returns point rightside, leftside, upside and downside
@@ -134,7 +134,8 @@ func createSweetHome(matrix *[]models.Location, col int) {
 							lastPoint := addPoints(nextPoint, delta[j]) //brute force every neighbour points from previous
 							if lastPoint.isPoint() && !reflect.DeepEqual(lastPoint, curPoint) &&
 								isEmpty(matrix, lastPoint.X, lastPoint.Y) { //validate and check if point is empty
-								spawnPoints = append(spawnPoints, curPoint) //add point to spawn points
+								homeSpawnPoints = append(homeSpawnPoints, curPoint)      //add point to spawn sweet homes
+								playerSpawnPoints = append(playerSpawnPoints, nextPoint) //add point to spawn player
 							}
 						}
 					} else {
@@ -147,9 +148,33 @@ func createSweetHome(matrix *[]models.Location, col int) {
 		}
 	}
 
-	//Choose one of possible spawnPoints and generate SweetHome there
-	sweetHomePoint := spawnPoints[random.Intn(len(spawnPoints))]
-	homeName := fmt.Sprintf("Sweet Home-%s", Clans[SweetHomesSet])
-	(*matrix)[sweetHomePoint.Y*Width+sweetHomePoint.X] = &models.SweetHome{ObjectName: homeName}
+	//Select current clan
+	curClan := Clans[SweetHomesSet]
 	SweetHomesSet++
+	//Select one of possible points to spawn SweetHome & Player
+	pointIndex := random.Intn(len(homeSpawnPoints))
+	//Create sweet home
+	sweetHomePoint := homeSpawnPoints[pointIndex]
+	homeName := fmt.Sprintf("Sweet Home-%s", curClan)
+	picPath := fmt.Sprintf("photos/castle-%s.png", curClan)
+
+	(*matrix)[sweetHomePoint.Y*Width+sweetHomePoint.X] = &models.SweetHome{
+		ObjectName: homeName,
+		X:          sweetHomePoint.X,
+		Y:          sweetHomePoint.Y,
+		SmallPic:   picPath,
+	}
+	//Create playerSpawnPoint
+	var playerPoint int = playerSpawnPoints[pointIndex].Y*Width + playerSpawnPoints[pointIndex].X
+	switch curClan {
+	case Clans[0]:
+		game.RedSpawn = playerPoint
+		break
+	case Clans[1]:
+		game.GreenSpawn = playerPoint
+		break
+	case Clans[2]:
+		game.BlueSpawn = playerPoint
+		break
+	}
 }

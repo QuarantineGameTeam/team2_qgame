@@ -4,7 +4,6 @@ import (
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/config"
 	"github.com/QuarantineGameTeam/team2_qgame/game"
-	"github.com/QuarantineGameTeam/team2_qgame/handlers"
 	"log"
 	"time"
 )
@@ -20,7 +19,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	
 	firstUpdate := 0
 	lastUpdate := 0
 	var update api.Update
@@ -37,11 +36,11 @@ func main() {
 
 			if update.UpdateID != 0 {
 				// run handlers asynchronously
-				go handlers.HandleUpdate(client, update)
+				go game.HandleUpdate(client, update)
 			}
 		}
 
-		game.GameUpdate()
+		game.GameUpdate(client)
 
 		time.Sleep(time.Millisecond * 100)
 	}

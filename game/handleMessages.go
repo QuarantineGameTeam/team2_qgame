@@ -1,4 +1,4 @@
-package handlers
+package game
 
 import (
 	"fmt"
@@ -13,8 +13,17 @@ func handleUpdateMessage(client *api.Client, update api.Update) {
 
 	if message.Text == "/start" {
 		handleStartMessage(client, message)
+	} else if message.Text == "/help" {
+		handleHelpMessage(client, message)
+	} else if message.Text == "/rules" {
+		handleRulesMessage(client, message)
 	} else if fitsState(message.FromUser, config.StateChangingName) {
 		handleChangeNickNameMessage(client, message)
+	}
+
+	// DEV OPTION
+	if message.Text == "/reset" && message.FromUser.ID == config.DevID {
+		handleResetMessage(client, message)
 	}
 }
 
@@ -30,13 +39,13 @@ func handleStartMessage(client *api.Client, message api.UpdateMessage) {
 	}
 
 	if contains {
-		err = client.SendMessage(api.Message{
+		_, err = client.SendMessage(api.Message{
 			ChatID:       message.FromUser.ID,
 			Text:         fmt.Sprintf("Hello, %s! Welcome back!", message.FromUser.FirstName),
 			InlineMarkup: startMarkup,
 		})
 	} else {
-		err = client.SendMessage(api.Message{
+		_, err = client.SendMessage(api.Message{
 			ChatID:       message.FromUser.ID,
 			Text:         fmt.Sprintf("Hello, %s! Welcome to CandyWarGO!", message.FromUser.FirstName),
 			InlineMarkup: startMarkup,
@@ -49,6 +58,28 @@ func handleStartMessage(client *api.Client, message api.UpdateMessage) {
 		}
 	}
 
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func handleHelpMessage(client *api.Client, message api.UpdateMessage) {
+	handleHelpAndRules(client, message)
+}
+
+func handleRulesMessage(client *api.Client, message api.UpdateMessage) {
+	handleHelpAndRules(client, message)
+}
+
+func handleHelpAndRules(client *api.Client, message api.UpdateMessage){
+	// todo refer to user lang code in next releases
+	langCode := "en"
+	msg := getMessage(message.Text, langCode)
+
+	_, err := client.SendMessage(api.Message {
+		ChatID: message.FromUser.ID,
+		Text: msg,
+	})
 	if err != nil {
 		log.Println(err)
 	}
@@ -81,9 +112,29 @@ func handleChangeNickNameMessage(client *api.Client, message api.UpdateMessage) 
 		msg = "Sorry. Some error happened."
 	}
 
-	err = client.SendMessage(
+	_, err = client.SendMessage(
 		api.Message{
-			ChatID: message.FromUser.ID,
-			Text:   msg,
+			ChatID:       message.FromUser.ID,
+			Text:         msg,
+			InlineMarkup: startMarkup,
 		})
+}
+
+// --------------------
+func handleResetMessage(client *api.Client, message api.UpdateMessage) {
+	err := database.ResetTables()
+	if err == nil {
+		_, err = client.SendMessage(api.Message{
+			ChatID: message.FromUser.ID,
+			Text: "Ok. Tables are reset.",
+		})
+	} else {
+		_, err = client.SendMessage(api.Message{
+			ChatID: message.FromUser.ID,
+			Text: "Ok. Tables are reset.",
+		})
+	}
+	if err != nil {
+		log.Println(err)
+	}
 }

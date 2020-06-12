@@ -55,7 +55,7 @@ func TestClient_SendMessage(t *testing.T) {
 			c := &Client{
 				token: tt.fields.token,
 			}
-			if err := c.SendMessage(tt.args.m); (err != nil) != tt.wantErr {
+			if _, err := c.SendMessage(tt.args.m); (err != nil) != tt.wantErr {
 				t.Errorf("SendMessage() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

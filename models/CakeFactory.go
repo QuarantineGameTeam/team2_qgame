@@ -22,7 +22,7 @@ const (
 	CakeFactoryBonusGold = 2
 
 	//Paths to pictures
-	SmallCakeFactoryPicPath = ""
+	SmallCakeFactoryPicPath = "photos/cake_factory.png"
 	BigCakeFactoryPicPath   = ""
 )
 

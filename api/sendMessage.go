@@ -1,10 +1,10 @@
 package api
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -17,7 +17,7 @@ import (
 
 	Sends given message using Client' credentials
 */
-func (c *Client) SendMessage(m Message) error {
+func (c *Client) SendMessage(m Message) (UpdateMessage, error) {
 	method := "/sendMessage"
 
 	req := url.Values{}
@@ -33,13 +33,29 @@ func (c *Client) SendMessage(m Message) error {
 	resp, err := http.Get(query)
 
 	if err != nil {
-		log.Fatal(err)
+		return UpdateMessage{}, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return UpdateMessage{}, err
 	}
 
 	if resp.StatusCode == 200 {
-		return nil
+		var response struct{
+			OK bool `json:"ok"`
+			Result UpdateMessage
+		}
+		err = json.Unmarshal(body, &response)
+		if err != nil {
+			return UpdateMessage{}, err
+		}
+		if !response.OK {
+			return UpdateMessage{}, err
+		}
+
+		return response.Result, nil
 	}
 
-	body, _ := ioutil.ReadAll(resp.Body)
-	return errors.New(string(body))
+	return UpdateMessage{}, errors.New(string(body))
 }

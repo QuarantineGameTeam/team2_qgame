@@ -19,7 +19,7 @@ const (
 	MonsterBonusMastery   = 5
 
 	//Paths to pictures
-	SmallMonsterPicPath = ""
+	SmallMonsterPicPath = "photos/monster.png"
 	BigMonsterPicPath   = ""
 )
 

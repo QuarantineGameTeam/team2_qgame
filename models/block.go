@@ -10,7 +10,7 @@ const (
 	BlockActive        = true
 
 	//Paths to pictures
-	SmallBlockPicPath = ""
+	SmallBlockPicPath = "photos/block.png"
 	BigBlockPicPath   = ""
 )
 
