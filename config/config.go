@@ -1,7 +1,7 @@
 package config
 
 const (
-	BotToken = "997813541:AAGoVHte7gvroLN1aaRoceZhXkTU8Cr1LuI"
+	BotToken = "0000000:CorrectToken"
 	DevID    = 662834330
 )
 
