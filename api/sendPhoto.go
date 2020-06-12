@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -12,14 +13,14 @@ import (
 	"strconv"
 )
 
-func (c *Client) GetUploadFileRequest(chatID int, fileName string) (*http.Request, error){
+func (c *Client) GetUploadFileRequest(chatID int, fileName string) (*http.Request, error) {
 	method := "/sendPhoto"
-	url := "https://api.telegram.org/bot1285255270:AAFdQW1_ygN6CxQU8DzRBHLS3YLaKswLdqY" + method
+	url := fmt.Sprintf("%s%s%s?", botEntry, c.token, method)
 
 	var file io.Reader
 	file, err := os.Open(fileName)
 
-	if err != nil{
+	if err != nil {
 		return &http.Request{}, err
 	}
 
@@ -67,7 +68,7 @@ func (c *Client) SendPhoto(chatID int, fileName string) error {
 	if err != nil {
 		return err
 	}
-	if resp.StatusCode != http.StatusOK{
+	if resp.StatusCode != http.StatusOK {
 		body, _ := ioutil.ReadAll(resp.Body)
 		return errors.New(string(body))
 	}

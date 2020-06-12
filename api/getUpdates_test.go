@@ -11,16 +11,14 @@ func TestClient_GetUpdates(t *testing.T) {
 	lastUpdate := 0
 
 	client := &Client{
-		"1285255270:",
+		testToken,
 	}
 
 	// terminates after receiving 10 updates
-	for lastUpdate-firstUpdate < 10{
-		updates := client.GetUpdates(lastUpdate+1)
-		if len(updates) != 0{
-			fmt.Println(updates[0])
-
-			if firstUpdate == 0{
+	for lastUpdate-firstUpdate < 10 {
+		updates := client.GetUpdates(lastUpdate + 1)
+		if len(updates) != 0 {
+			if firstUpdate == 0 {
 				firstUpdate = updates[0].UpdateID
 			}
 			lastUpdate = updates[0].UpdateID

@@ -6,8 +6,9 @@ package api
 	For that, please refer to Message.
 */
 type UpdateMessage struct {
-	MessageID    int    `json:"message_id"`
-	FromUser     User   `json:"from"`
-	Date         int64  `json:"date"`
-	Text         string `json:"text"`
+	MessageID int    `json:"message_id"`
+	FromUser  User   `json:"from"`
+	Chat      Chat   `json:"chat"`
+	Date      int64  `json:"date"`
+	Text      string `json:"text"`
 }

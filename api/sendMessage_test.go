@@ -17,18 +17,18 @@ func TestClient_SendMessage(t *testing.T) {
 	}{
 		{
 			"Raw message",
-			fields{"1285255270:SomeCorrectToken"},
+			fields{testToken},
 			args{Message{
-				ChatID: 123456789,
+				ChatID: testSendToID,
 				Text:   "Hello, it's a raw text.",
 			}},
 			false,
 		},
 		{
 			"Message with markup",
-			fields{"1285255270:SomeCorrectToken"},
+			fields{testToken},
 			args{Message{
-				ChatID: 123456789,
+				ChatID: testSendToID,
 				Text:   "Hello, it's text with inline markup.",
 				InlineMarkup: InlineKeyboardMarkup{
 					[][]InlineKeyboardButton{
@@ -55,7 +55,7 @@ func TestClient_SendMessage(t *testing.T) {
 			c := &Client{
 				token: tt.fields.token,
 			}
-			if err := c.SendMessage(tt.args.m); (err != nil) != tt.wantErr {
+			if _, err := c.SendMessage(tt.args.m); (err != nil) != tt.wantErr {
 				t.Errorf("SendMessage() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

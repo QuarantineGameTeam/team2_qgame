@@ -12,14 +12,14 @@ func TestLocation_Interact(t *testing.T) {
 		wantX, wantY int
 	}{
 		{
-			Player{2, 4},
-			&EmptyField{2, 5},
+			Player{2, 4, "Player1", "Soprano's Clan", 1, "png", "PNG", true, 100, 100, 100, 100, 100, 100, 100, 100, 100},
+			&EmptyField{2, 5, "Road", true, true, "png", "PNG"},
 			2,
 			5,
 		},
 		{
-			Player{10, 5},
-			&EmptyField{11, 5},
+			Player{10, 5, "Player2", "Roshen's Clan", 1, "a", "A", true, 100, 100, 100, 100, 100, 100, 100, 100, 100},
+			&EmptyField{11, 5, "Road", true, true, "png", "PNG"},
 			11,
 			5,
 		},
