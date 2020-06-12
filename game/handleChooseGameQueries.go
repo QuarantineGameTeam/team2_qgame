@@ -18,6 +18,17 @@ var (
 func handleChooseGameQueries(client *api.Client, query api.CallBackQuery) {
 	data := query.CallBackData
 
+	gm := getPlayerGame(query.FromUser)
+	if gm != nil {
+		players := gm.Players
+		for _, p := range players {
+			if p.Clan == data {
+				refuseJoining(client, query)
+				return
+			}
+		}
+	}
+
 	pass := true
 	for _, clan := range clans {
 		if data == clan {
@@ -27,6 +38,13 @@ func handleChooseGameQueries(client *api.Client, query api.CallBackQuery) {
 
 	if !pass {
 		joinClan(client, query, data)
+	}
+}
+
+func refuseJoining(client *api.Client, query api.CallBackQuery) {
+	err := client.AnswerCallBackQuery(query, fmt.Sprintf("This clan is full. Please, choose another one."), true)
+	if err != nil {
+		log.Println(err)
 	}
 }
 
@@ -40,9 +58,6 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 
 	// Go for determining player's game
 	gm := getPlayerGame(query.FromUser)
-
-	// Positioning them near the castles
-	LocatePlayers(gm)
 
 	err = client.DeleteMessage(query.Message)
 	if err != nil {
@@ -58,16 +73,9 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 	ind := indexPlayer(gm.Players, *player)
 	player.Clan = data
 	gm.Players[ind] = *player
+	gm.Players[ind].SmallPic = fmt.Sprintf("photos/player-%s.png", data)
 
-	newJSON, err := json.Marshal(gm.Players)
-	if err != nil {
-		log.Println(err)
-	}
 	err = dbh.Update("players", "clan", data, "player_id", query.FromUser.ID)
-	if err != nil {
-		log.Println(err)
-	}
-	err = dbh.Update("games", "players_json", newJSON, "game_id", gm.GameID)
 	if err != nil {
 		log.Println(err)
 	}
@@ -75,6 +83,17 @@ func joinClan(client *api.Client, query api.CallBackQuery, data string) {
 	if err != nil {
 		log.Println(err)
 	}
+
+	newJSON, err := json.Marshal(gm.Players)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = dbh.Update("games", "players_json", newJSON, "game_id", gm.GameID)
+	if err != nil {
+		log.Println(err)
+	}
+
 
 	_, err = client.SendMessage(api.Message {
 		ChatID: query.FromUser.ID,

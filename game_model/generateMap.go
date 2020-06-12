@@ -1,4 +1,4 @@
-package game
+package game_model
 
 import (
 	"fmt"
@@ -6,7 +6,6 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/QuarantineGameTeam/team2_qgame/game_model"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 )
 
@@ -33,7 +32,7 @@ var Clans []string = []string{"red", "green", "blue"}
 var SweetHomesSet int = 0
 
 //GenerateMap returns array of models.Location with objects needed
-func GenerateMap(game *game_model.Game) {
+func GenerateMap(game *Game) {
 	game.Locations = getEmptyMap()
 
 	setObjects(&game.Locations, "CakeFactory", CakeFactories)
@@ -114,7 +113,7 @@ func addPoints(point1, point2 Point) Point {
 	return Point{point1.X + point2.X, point1.Y + point2.Y}
 }
 
-func createSweetHome(game *game_model.Game, col int) {
+func createSweetHome(game *Game, col int) {
 	matrix := &game.Locations
 	seed := rand.NewSource(time.Now().UnixNano()) //setting time as a seed for random
 	random := rand.New(seed)                      //setting seed
@@ -157,7 +156,14 @@ func createSweetHome(game *game_model.Game, col int) {
 	//Create sweet home
 	sweetHomePoint := homeSpawnPoints[pointIndex]
 	homeName := fmt.Sprintf("Sweet Home-%s", curClan)
-	(*matrix)[sweetHomePoint.Y*Width+sweetHomePoint.X] = &models.SweetHome{ObjectName: homeName, X: sweetHomePoint.X, Y: sweetHomePoint.Y}
+	picPath := fmt.Sprintf("photos/castle-%s.png", curClan)
+
+	(*matrix)[sweetHomePoint.Y*Width+sweetHomePoint.X] = &models.SweetHome{
+		ObjectName: homeName,
+		X:          sweetHomePoint.X,
+		Y:          sweetHomePoint.Y,
+		SmallPic:   picPath,
+	}
 	//Create playerSpawnPoint
 	var playerPoint int = playerSpawnPoints[pointIndex].Y*Width + playerSpawnPoints[pointIndex].X
 	switch curClan {

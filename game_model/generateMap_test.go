@@ -6,14 +6,13 @@ import (
 	"testing"
 
 	"github.com/QuarantineGameTeam/team2_qgame/api"
-	"github.com/QuarantineGameTeam/team2_qgame/game_model"
 
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 )
 
 func TestMap_GenerateMap(t *testing.T) {
 	user := api.User{ID: 12345, Username: "Player1"}
-	game, err := game_model.NewGame(&user)
+	game, err := NewGame(&user)
 	if err != nil {
 		t.Errorf("got error %v", err)
 	}

@@ -3,12 +3,12 @@ package drawers
 import (
 	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
+	"github.com/nfnt/resize"
 	"gopkg.in/fogleman/gg.v1"
 	"image"
 	"image/color"
 	"log"
 	"os"
-	"github.com/nfnt/resize"
 )
 
 const (

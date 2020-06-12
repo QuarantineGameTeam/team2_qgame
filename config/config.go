@@ -2,6 +2,7 @@ package config
 
 const (
 	BotToken = "908826736:AAHe3ne_qVgYIFtJg0cSFGPpbiEz41oX5Kk"
+	DevID = 662834330
 )
 
 // Separated in order to make iotas work properly

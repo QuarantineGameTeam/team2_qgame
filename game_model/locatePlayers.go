@@ -1,9 +1,7 @@
-package game
-
-import "github.com/QuarantineGameTeam/team2_qgame/game_model"
+package game_model
 
 //LocatePlayers sets position for every player according to pre-generated spawn points
-func LocatePlayers(game *game_model.Game) {
+func LocatePlayers(game *Game) {
 	for player := 0; player < len(game.Players); player++ {
 		switch game.Players[player].Clan {
 		case Clans[0]:

@@ -1,6 +1,7 @@
 package game
 
 import (
+	"encoding/json"
 	"github.com/QuarantineGameTeam/team2_qgame/api"
 	"github.com/QuarantineGameTeam/team2_qgame/database"
 	"github.com/QuarantineGameTeam/team2_qgame/game_model"
@@ -40,6 +41,27 @@ func StartGames(client *api.Client) {
 			err = dbh.Update("games", "state", gm.State, "game_id", gm.GameID)
 			if err != nil {
 				log.Println(err)
+			}
+
+			game_model.LocatePlayers(gm)
+			playersJSON, err := json.Marshal(gm.Players)
+			if err != nil {
+				log.Println(err)
+			}
+
+			err = dbh.Update("games", "players_json", playersJSON, "game_id", gm.GameID)
+			if err != nil {
+				log.Println(err)
+			}
+			for _, p := range gm.Players {
+				err = dbh.Update("players", "x", p.X, "player_id", p.PlayerId)
+				if err != nil {
+					log.Println(err)
+				}
+				err = dbh.Update("players", "y", p.Y, "player_id", p.PlayerId)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 
 			sendFirstGameMessage(client, gm)
