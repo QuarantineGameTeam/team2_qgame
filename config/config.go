@@ -1,8 +1,8 @@
 package config
 
 const (
-	BotToken = "00000000:CorrectToken"
-	DevID = 662834330
+	BotToken = "0000000:CorrectToken"
+	DevID    = 662834330
 )
 
 // Separated in order to make iotas work properly

@@ -28,9 +28,6 @@ const (
 //Clans contains clan names
 var Clans []string = []string{"red", "green", "blue"}
 
-//SweetHomesSet contains amount of SweetHomes, which have been already set
-var SweetHomesSet int = 0
-
 //GenerateMap returns array of models.Location with objects needed
 func GenerateMap(game *Game) {
 	game.Locations = getEmptyMap()
@@ -149,8 +146,7 @@ func createSweetHome(game *Game, col int) {
 	}
 
 	//Select current clan
-	curClan := Clans[SweetHomesSet]
-	SweetHomesSet++
+	curClan := Clans[col]
 	//Select one of possible points to spawn SweetHome & Player
 	pointIndex := random.Intn(len(homeSpawnPoints))
 	//Create sweet home
