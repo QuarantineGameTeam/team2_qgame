@@ -49,10 +49,10 @@ func GenerateMap(game *Game) {
 
 //getEmptyMap returns array of EmptyFields
 func getEmptyMap() []models.Location {
-	result := []models.Location{}
+	result := make([]models.Location, Width * Height)
 	for w := 0; w < Width; w++ {
 		for h := 0; h < Height; h++ {
-			result = append(result, models.NewEmptyField(w, h))
+			result[h * Width + w] = models.NewEmptyField(w, h)
 		}
 	}
 	return result

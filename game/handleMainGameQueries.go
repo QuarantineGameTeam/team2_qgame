@@ -25,7 +25,12 @@ func handleMainGameQueries(client *api.Client, query api.CallBackQuery) {
 func handleMapQueries(client *api.Client, query api.CallBackQuery) {
 	// Gonna be working with MapView as soon as visited points are implemented
 
-	_, err := client.SendMessage(api.Message {
+	err := client.AnswerCallBackQuery(query, "Okay.", false)
+	if err != nil {
+		log.Println(err)
+	}
+
+	_, err = client.SendMessage(api.Message {
 		ChatID: query.FromUser.ID,
 		Text: "This is all you've visited so far!",
 	})
