@@ -17,7 +17,7 @@ func StartGames(client *api.Client) {
 	games := dbh.GetGames()
 
 	for _, gm := range games {
-		if gm.State != game_model.StateMatchMaking {
+		if gm.State != game_model.StateChoosingClan {
 			continue
 		}
 

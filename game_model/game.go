@@ -9,9 +9,10 @@ import (
 )
 
 const (
-	StateMatchMaking = iota
-	StateRunning     = iota
-	StateEnded       = iota
+	StateMatchMaking  = iota
+	StateChoosingClan = iota
+	StateRunning      = iota
+	StateEnded        = iota
 )
 
 const PlayersCount = 3

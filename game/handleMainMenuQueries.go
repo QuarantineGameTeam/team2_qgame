@@ -93,7 +93,11 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 				}
 
 				if len(gm.Players) >= game_model.PlayersCount {
-					gm.State = game_model.StateRunning
+					gm.State = game_model.StateChoosingClan
+					err = dbh.Update("games", "state", gm.State, "game_id", gm.GameID)
+					if err != nil {
+						log.Println(err)
+					}
 					sendChooseClanMarkup(client, gm)
 				}
 				joined = true
