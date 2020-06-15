@@ -26,7 +26,7 @@ const (
 	SweetHomeBonusSpeed      = 2
 
 	//Paths to pictures
-	SmallSweetHomePicPath = ""
+	SmallSweetHomePicPath = "photos/castle-red.png"
 	BigSweetHomePicPath   = ""
 )
 

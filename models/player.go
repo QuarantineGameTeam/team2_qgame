@@ -4,11 +4,12 @@ import "github.com/QuarantineGameTeam/team2_qgame/api"
 
 const (
 	//Paths to pictures
-	SmallPlayerPicPath = "photos/enemy.png"
+	SmallPlayerPicPath = "photos/player-red.png"
 	BigPlayerPicPath   = ""
 
 	PlayerActive  = true
 	PlayerMessage = "You've met the player"
+	PlayerClan    = ""
 
 	//Start characteristics for each player
 	PlayerStartHealth     = 100
@@ -31,6 +32,7 @@ type Player struct {
 	SmallPic   string `json:"small_pic"` //path to pic
 	BigPic     string `json:"big_pic"`
 	Active     bool   `json:"active"` //if active = true, then drawing on the map and use the functional
+	Clan       string
 	//
 	Health     int `json:"health"`
 	Dexterity  int `json:"dexterity"`
@@ -58,6 +60,7 @@ func NewPlayer(owner api.User, x, y int) *Player {
 		ScoreCake:  PlayerStartCakes,
 		ScoreGold:  PlayerStartGold,
 		ScoreCandy: PlayerStartCandy,
+		Clan:       PlayerClan,
 		X:          x,
 		Y:          y,
 		ObjectName: owner.Username,

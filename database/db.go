@@ -4,11 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/QuarantineGameTeam/team2_qgame/utils"
 	"log"
 
+	"github.com/QuarantineGameTeam/team2_qgame/game_model"
+	"github.com/QuarantineGameTeam/team2_qgame/utils"
+
 	"github.com/QuarantineGameTeam/team2_qgame/api"
-	"github.com/QuarantineGameTeam/team2_qgame/game"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
 
 	//import sqlite driver
@@ -63,6 +64,7 @@ func (dbh *DBHandler) CreatePlayersTable() error {
 					message TEXT,
 					x INTEGER,
 					y INTEGER,
+					clan TEXT,
 					smallPic TEXT,
 					bigPic TEXT,
 					active INTEGER,
@@ -93,8 +95,8 @@ func (dbh *DBHandler) InsertPlayer(player models.Player) error {
 	if player.Active {
 		active = 1
 	}
-	_, err := dbh.Connection.Exec(`INSERT INTO players (player_id, nickname, message, x, y, smallPic, bigPic, active, health, dexterity, mastery, damage, speed, visibility, candies, cakes, gold) 
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`, player.PlayerId, player.ObjectName, player.Message, player.X, player.Y, player.SmallPic, player.BigPic, active, player.Health,
+	_, err := dbh.Connection.Exec(`INSERT INTO players (player_id, nickname, message, x, y, clan, smallPic, bigPic, active, health, dexterity, mastery, damage, speed, visibility, candies, cakes, gold) 
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`, player.PlayerId, player.ObjectName, player.Message, player.X, player.Y, player.Clan, player.SmallPic, player.BigPic, active, player.Health,
 		player.Dexterity, player.Mastery, player.Damage, player.Speed, player.Visibility, player.ScoreCandy, player.ScoreCake, player.ScoreGold)
 
 	return err
@@ -193,7 +195,7 @@ func (dbh *DBHandler) GetPlayerByID(id int) (*models.Player, error) {
 	defer result.Close()
 	if result.Next() {
 		var active int = 1
-		err := result.Scan(&player.PlayerId, &player.ObjectName, &player.Message, &player.X, &player.Y, &player.SmallPic, &player.BigPic, &active, &player.Health,
+		err := result.Scan(&player.PlayerId, &player.ObjectName, &player.Message, &player.X, &player.Y, &player.Clan, &player.SmallPic, &player.BigPic, &active, &player.Health,
 			&player.Dexterity, &player.Mastery, &player.Damage, &player.Speed, &player.Visibility, &player.ScoreCandy, &player.ScoreCake, &player.ScoreGold)
 		if active == 0 {
 			player.Active = false
@@ -215,12 +217,15 @@ func (dbh *DBHandler) CreateGamesTable() error {
 					player_id INTEGER,
 					startmove_time INTEGER,
 					players_json TEXT,
+					red_spawn INTEGER,
+					green_spawn INTEGER,
+					blue_spawn INTEGER,
 					state INTEGER);`)
 	return err
 }
 
 //InsertGame adds a game to the Games table
-func (dbh *DBHandler) InsertGame(game game.Game) error {
+func (dbh *DBHandler) InsertGame(game game_model.Game) error {
 	bytes, err := json.Marshal(game.Locations)
 	if err != nil {
 		return err
@@ -234,23 +239,24 @@ func (dbh *DBHandler) InsertGame(game game.Game) error {
 	game.PlayersJSON = string(bytes)
 
 	//Player structure is described in the models package file player.go
-	_, err = dbh.Connection.Exec(`INSERT INTO games (game_json, player_id, startmove_time, players_json, state) 
-									VALUES (?, ?, ?, ?, ?);`,
-		game.GameJSON, game.PlayerID, game.StartMoveTime, game.PlayersJSON, game.State)
+	_, err = dbh.Connection.Exec(`INSERT INTO games (game_json, player_id, startmove_time, players_json, red_spawn, green_spawn, blue_spawn, state) 
+									VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
+		game.GameJSON, game.PlayerID, game.StartMoveTime, game.PlayersJSON, game.RedSpawn, game.GreenSpawn, game.BlueSpawn, game.State)
 
 	return err
 }
 
 //GetGameByID returns game.Game object from database with specified id
-func (dbh *DBHandler) GetGameByID(id int) (*game.Game, error) {
-	gm := new(game.Game)
+func (dbh *DBHandler) GetGameByID(id int) (*game_model.Game, error) {
+	gm := new(game_model.Game)
 	result, err := dbh.Connection.Query(`SELECT * FROM games WHERE game_id = ?;`, id)
 	if err != nil {
 		panic(err)
 	}
 	defer result.Close()
 	if result.Next() {
-		err := result.Scan(&gm.GameID, &gm.GameJSON, &gm.PlayerID, &gm.StartMoveTime, &gm.PlayersJSON, &gm.State)
+		err := result.Scan(&gm.GameID, &gm.GameJSON, &gm.PlayerID, &gm.StartMoveTime, &gm.PlayersJSON, &gm.RedSpawn,
+			&gm.GreenSpawn, &gm.BlueSpawn, &gm.State)
 		err = json.Unmarshal([]byte(gm.GameJSON), &gm.Locations)
 		if err != nil {
 			log.Println(err)
@@ -260,24 +266,24 @@ func (dbh *DBHandler) GetGameByID(id int) (*game.Game, error) {
 		if err != nil {
 			log.Println(err)
 		}
-		return gm, err
 	}
 	return gm, err
 }
 
 //GetGames returns array of all current games
-func (dbh *DBHandler) GetGames() []*game.Game {
-	var games []*game.Game
+func (dbh *DBHandler) GetGames() []*game_model.Game {
+	var games []*game_model.Game
 	result, err := dbh.Connection.Query(`SELECT * FROM games;`)
 	if err != nil {
 		log.Println()
 	}
-	
+
 	if result != nil {
 		for result.Next() {
-			readingGame := new(game.Game)
-			err = result.Scan(&readingGame.GameID, &readingGame.GameJSON, &readingGame.PlayerID, 
-				&readingGame.StartMoveTime, &readingGame.PlayersJSON, &readingGame.State)
+			readingGame := new(game_model.Game)
+			err = result.Scan(&readingGame.GameID, &readingGame.GameJSON, &readingGame.PlayerID,
+				&readingGame.StartMoveTime, &readingGame.PlayersJSON, &readingGame.RedSpawn,
+				&readingGame.GreenSpawn, &readingGame.BlueSpawn, &readingGame.State)
 			if err != nil {
 				log.Println(err)
 			}
@@ -292,9 +298,6 @@ func (dbh *DBHandler) GetGames() []*game.Game {
 				log.Println(err)
 			}
 
-			// todelete
-			fmt.Print(readingGame.Players)
-			
 			games = append(games, readingGame)
 		}
 	}

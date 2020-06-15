@@ -3,12 +3,12 @@ package drawers
 import (
 	"fmt"
 	"github.com/QuarantineGameTeam/team2_qgame/models"
+	"github.com/nfnt/resize"
 	"gopkg.in/fogleman/gg.v1"
 	"image"
 	"image/color"
 	"log"
 	"os"
-	"github.com/nfnt/resize"
 )
 
 const (
@@ -78,45 +78,45 @@ func CreatePartViewPhoto(locations []models.Location, players []models.Player, d
 		crop := resize.Resize(uint(s)/uint(horizon), uint(s)/uint(horizon), img, resize.Lanczos3)
 		if locX >= (drawingCenterX - drawingHorizon) && locX <= (drawingCenterX + drawingHorizon) {
 			if locY >= (drawingCenterY - drawingHorizon) && locY <= (drawingCenterY + drawingHorizon) {
-				if locX > drawingCenterX && locY > drawingCenterY {
-					context.DrawImage(crop, int(s)*2/3, int(s)*2/3)
-				} else if locX == drawingCenterX && locY > drawingCenterY {
-					context.DrawImage(crop, int(s)/3, int(s)*2/3)
-				} else if locX < drawingCenterX && locY > drawingCenterY {
-					context.DrawImage(crop, 0, int(s)*2/3)
-				} else if locX > drawingCenterX && locY == drawingCenterY {
-					context.DrawImage(crop, int(s)*2/3, int(s)/3)
-				} else if locX > drawingCenterX && locY < drawingCenterY {
-					context.DrawImage(crop, int(s)*2/3, 0)
-				} else if locX == drawingCenterX && locY == drawingCenterY {
-					context.DrawImage(crop, int(s)/3, int(s)/3)
-				} else if locX == drawingCenterX && locY < drawingCenterY {
-					context.DrawImage(crop, int(s)/3, 0)
-				} else if locX < drawingCenterX && locY == drawingCenterY {
-					context.DrawImage(crop, 0, int(s)/3)
-				} else if locX < drawingCenterX && locY < drawingCenterY {
-					context.DrawImage(crop, 0, 0)
-				}
+                if locX > drawingCenterX && locY > drawingCenterY {
+                    context.DrawImage(crop, int(s)*2/3, int(s)*2/3)
+                } else if locX == drawingCenterX && locY > drawingCenterY {
+                    context.DrawImage(crop, int(s)/3, int(s)*2/3)
+                } else if locX < drawingCenterX && locY > drawingCenterY {
+                    context.DrawImage(crop, 0, int(s)*2/3)
+                } else if locX > drawingCenterX && locY == drawingCenterY {
+                    context.DrawImage(crop, int(s)*2/3, int(s)/3)
+                } else if locX > drawingCenterX && locY < drawingCenterY {
+                    context.DrawImage(crop, int(s)*2/3, 0)
+                } else if locX == drawingCenterX && locY == drawingCenterY {
+                    context.DrawImage(crop, int(s)/3, int(s)/3)
+                } else if locX == drawingCenterX && locY < drawingCenterY {
+                    context.DrawImage(crop, int(s)/3, 0)
+                } else if locX < drawingCenterX && locY == drawingCenterY {
+                    context.DrawImage(crop, 0, int(s)/3)
+                } else if locX < drawingCenterX && locY < drawingCenterY {
+                    context.DrawImage(crop, 0, 0)
+                }
+
 			}
 		}
-		if drawingCenterX == defaultDimension {
+		if drawingCenterX == defaultDimension && drawingCenterY > 0 && drawingCenterY < defaultDimension {
 			context.DrawRectangle(s*2/3, 0, s*2/3, s)
 			context.SetRGB(255, 0, 0)
 			context.Fill()
-		} else if drawingCenterY == defaultDimension {
+		} else if drawingCenterY == defaultDimension && drawingCenterX > 0 && drawingCenterX < defaultDimension {
 			context.DrawRectangle(0, s*2/3, s, s/3)
 			context.SetRGB(255, 0, 0)
 			context.Fill()
-		} else if drawingCenterX == 0 {
+		} else if drawingCenterX == 0 && drawingCenterY > 0 && drawingCenterY < defaultDimension {
 			context.DrawRectangle(0, 0, s/3, s)
 			context.SetRGB(255, 0, 0)
 			context.Fill()
-		} else if drawingCenterY == 0 {
+		} else if drawingCenterY == 0 && drawingCenterX > 0 && drawingCenterX < defaultDimension {
 			context.DrawRectangle(0, 0, s, s/3)
 			context.SetRGB(255, 0, 0)
 			context.Fill()
-		} 
-		if drawingCenterX == defaultDimension && drawingCenterY == defaultDimension {
+		} else if drawingCenterX == defaultDimension && drawingCenterY == defaultDimension {
 			context.DrawRectangle(s*2/3, 0, s*2/3, s)
 			context.SetRGB(255, 0, 0)
 			context.Fill()
@@ -177,7 +177,7 @@ func CreateMapViewPhoto(locations []models.Location, players []models.Player, vi
 		if visited[locX][locY] == true {
 			context.DrawImage(crop, int(scale(float64(locX), 0, float64(defaultDimension), 0, s)), int(scale(float64(locY), 0, float64(defaultDimension), 0, s)))
 		} else {
-			fl, err := os.Open("photos/forest.jpeg")
+			fl, err := os.Open("photos/forest.png")
 			if err != nil {
 				log.Fatal(err)
 			}

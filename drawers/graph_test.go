@@ -88,25 +88,25 @@ func Test_CreatePartViewPhoto(t *testing.T) {
 		&models.CandyFactory{
 			ObjectName: "cf1",
 			SmallPic:   "photos/candy_factory.png",
-			X:          3, Y: 4,
+			X:          9, Y: 4,
 		},
 		&models.Chest{
 			ObjectName: "ch1",
 			SmallPic:   "photos/chest.png",
-			X:          4, Y: 6,
+			X:          8, Y: 5,
 		},
 	}
 
 	p1 := *models.NewPlayer(api.User{}, 1, 2)
-	p1.SmallPic = "photos/enemy.png"
+	p1.SmallPic = "photos/player-green.png"
 	p2 := *models.NewPlayer(api.User{}, 3, 7)
-	p2.SmallPic = "photos/enemy.png"
+	p2.SmallPic = "photos/player-red.png"
 
 	players := []models.Player{
 		p1, p2,
 	}
 
-	err := CreatePartViewPhoto(locations, players,4, 4, 1, "test_part_view")
+	err := CreatePartViewPhoto(locations, players, 9, 9, 1, "test_part_view")
 	if err != nil {
 		t.Errorf("Expected nil error, got %v", err)
 	}
@@ -129,9 +129,9 @@ func Test_CreateMapViewPhoto(t *testing.T) {
 	}
 
 	p1 := *models.NewPlayer(api.User{}, 1, 2)
-	p1.SmallPic = "photos/enemy.png"
+	p1.SmallPic = "photos/player-green.png"
 	p2 := *models.NewPlayer(api.User{}, 3, 7)
-	p2.SmallPic = "photos/enemy.png"
+	p2.SmallPic = "photos/player-red.png"
 
 	players := []models.Player{
 		p1, p2,
@@ -176,9 +176,9 @@ func Test_CreateFullViewPhoto(t *testing.T) {
 	}
 
 	p1 := *models.NewPlayer(api.User{}, 1, 2)
-	p1.SmallPic = "photos/enemy.png"
+	p1.SmallPic = "photos/player-green.png"
 	p2 := *models.NewPlayer(api.User{}, 3, 7)
-	p2.SmallPic = "photos/enemy.png"
+	p2.SmallPic = "photos/player-red.png"
 
 	players := []models.Player{
 		p1, p2,
