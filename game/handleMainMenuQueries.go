@@ -57,7 +57,7 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 		if err != nil {
 			log.Println(err)
 		}
-		
+
 		p := models.NewPlayer(query.FromUser, 0, 0)
 		err = dbh.InsertPlayer(*p)
 		if err != nil {
@@ -107,6 +107,12 @@ func handleJoinGameQuery(client *api.Client, query api.CallBackQuery) {
 		if !joined {
 			// Creating new game if there are no opened games
 			gm, err := game_model.NewGame(&query.FromUser)
+			if err != nil {
+				log.Println(err)
+			}
+
+			p := models.NewPlayer(query.FromUser, 0, 0)
+			err = dbh.InsertPlayer(*p)
 			if err != nil {
 				log.Println(err)
 			}
