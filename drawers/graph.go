@@ -19,7 +19,7 @@ const (
 	gridThickness float64 = 3
 
 	//defaultDimension is a default size for a full map.
-	defaultDimension int = 9 //probably will be unused later. idk atm.
+	defaultDimension int = 8 //probably will be unused later. idk atm.
 )
 
 //NOTE: these 3 funcs are UNEXPORTED(they will be used only here).
@@ -102,47 +102,47 @@ func CreatePartViewPhoto(locations []models.Location, players []models.Player, d
 		}
 		if drawingCenterX == defaultDimension && drawingCenterY > 0 && drawingCenterY < defaultDimension {
 			context.DrawRectangle(s*2/3, 0, s*2/3, s)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 		} else if drawingCenterY == defaultDimension && drawingCenterX > 0 && drawingCenterX < defaultDimension {
 			context.DrawRectangle(0, s*2/3, s, s/3)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 		} else if drawingCenterX == 0 && drawingCenterY > 0 && drawingCenterY < defaultDimension {
 			context.DrawRectangle(0, 0, s/3, s)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 		} else if drawingCenterY == 0 && drawingCenterX > 0 && drawingCenterX < defaultDimension {
 			context.DrawRectangle(0, 0, s, s/3)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 		} else if drawingCenterX == defaultDimension && drawingCenterY == defaultDimension {
 			context.DrawRectangle(s*2/3, 0, s*2/3, s)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 			context.DrawRectangle(0, s*2/3, s, s*2/3)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 		} else if drawingCenterX == 0 && drawingCenterY == 0 {
 			context.DrawRectangle(0, 0, s/3, s)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 			context.DrawRectangle(0, 0, s, s/3)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 		} else if drawingCenterX == defaultDimension && drawingCenterY == 0 {
 			context.DrawRectangle(s*2/3, 0, s*2/3, s)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 			context.DrawRectangle(0, 0, s, s/3)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 		} else if drawingCenterX == 0 && drawingCenterY == defaultDimension {
 			context.DrawRectangle(0, 0, s/3, s)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 			context.DrawRectangle(0, s*2/3, s, s*2/3)
-			context.SetRGB(255, 0, 0)
+			context.SetColor(color.Black)
 			context.Fill()
 		}
 	}

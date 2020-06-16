@@ -106,7 +106,7 @@ func Test_CreatePartViewPhoto(t *testing.T) {
 		p1, p2,
 	}
 
-	err := CreatePartViewPhoto(locations, players, 9, 9, 1, "test_part_view")
+	err := CreatePartViewPhoto(locations, players, 8, 8, 1, "test_part_view")
 	if err != nil {
 		t.Errorf("Expected nil error, got %v", err)
 	}
